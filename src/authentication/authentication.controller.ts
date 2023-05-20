@@ -1,0 +1,54 @@
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  Post,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
+import { LocalAuthGuard } from 'src/common/guards/local-auth.guard';
+import { AuthenticationService } from './authentication.service';
+import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
+import { UsersService } from 'src/models/users/users.service';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { LoginEmailDto } from './dto/login-email.dto';
+import { ApiBaseResponse } from 'src/common/decorators/api-base-response.decorator';
+import { LoginDto } from './dto/login.dto';
+import { RegisterEmailDto } from './dto/register-email.dto';
+
+@Controller('authentication')
+@ApiTags('Authentication')
+export class AuthenticationController {
+  constructor(
+    private authenticationService: AuthenticationService,
+    private usersService: UsersService,
+  ) {}
+
+  @Post('login')
+  @HttpCode(200)
+  @ApiOperation({
+    summary: 'Login with email',
+  })
+  @ApiBaseResponse(LoginDto)
+  @UseGuards(LocalAuthGuard)
+  async login(@Body() _body: LoginEmailDto, @Req() req) {
+    return this.authenticationService.login(req.user);
+  }
+
+  @Post('register')
+  @ApiOperation({
+    summary: 'Register with email',
+  })
+  @ApiBaseResponse(LoginDto)
+  async create(@Body() body: RegisterEmailDto) {
+    return this.authenticationService.register(body);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('profile')
+  @ApiBearerAuth()
+  getProfile(@Req() req) {
+    return this.usersService.findOne(req.user.id);
+  }
+}
