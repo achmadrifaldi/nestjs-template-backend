@@ -29,7 +29,7 @@ export class AuthenticationService {
   async login(user: any): Promise<ILogin> {
     const payload = { name: user.name, sub: user.id };
     return {
-      access_token: this.jwtService.sign(payload),
+      accessToken: this.jwtService.sign(payload),
     };
   }
 
