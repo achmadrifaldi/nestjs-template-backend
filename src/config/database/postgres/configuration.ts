@@ -7,4 +7,5 @@ export default registerAs('databasePostgres', () => ({
   dbPassword: process.env.DATABASE_PASSWORD,
   dbPort: process.env.DATABASE_PORT,
   dbSync: process.env.DATABASE_SYNCHRONIZE,
+  dbLogging: process.env.DATABASE_LOGGING,
 }));

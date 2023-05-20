@@ -24,7 +24,10 @@ export class DatabasePostgresConfigService {
   get dbPort(): number {
     return this.configService.get<number>('databasePostgres.dbPort');
   }
-  get dbSync(): number {
-    return this.configService.get<number>('databasePostgres.dbSync');
+  get dbSync(): string {
+    return this.configService.get<string>('databasePostgres.dbSync');
+  }
+  get dbLogging(): string {
+    return this.configService.get<string>('databasePostgres.dbLogging');
   }
 }
