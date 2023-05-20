@@ -36,12 +36,7 @@ export class AuthenticationService {
   async register(registerEmailDto: RegisterEmailDto): Promise<User> {
     const { email, name, password } = registerEmailDto;
 
-    let emailExists;
-    try {
-      emailExists = await this.usersService.findOneByEmail(email);
-    } catch (err) {
-      emailExists = null;
-    }
+    const emailExists = await this.usersService.findOneByEmail(email);
 
     if (emailExists) {
       throw new BadRequestException(`Users with email ${email} already exists`);
