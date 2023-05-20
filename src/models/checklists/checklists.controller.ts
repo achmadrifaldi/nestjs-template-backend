@@ -13,19 +13,23 @@ import {
   Patch,
   Post,
   Query,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 import { ChecklistsService } from './checklists.service';
 import { CreateChecklistDto } from './dto/create-checklist.dto';
 import { UpdateChecklistDto } from './dto/update-checklist.dto';
 import { Checklist } from './entities/checklist.entity';
 import { HttpSuccessInterceptor } from 'src/common/interceptors/http-success.interceptor';
+import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
 
 @Controller('checklists')
 @UseInterceptors(HttpSuccessInterceptor)
+@UseGuards(JwtAuthGuard)
 @ApiTags('Checklist')
+@ApiBearerAuth()
 export class ChecklistsController {
   constructor(private readonly checklistsService: ChecklistsService) {}
 
@@ -33,6 +37,7 @@ export class ChecklistsController {
   @ApiOperation({
     summary: 'Create checklist',
   })
+  @ApiBaseResponse(Checklist)
   create(@Body() createChecklistDto: CreateChecklistDto) {
     return this.checklistsService.create(createChecklistDto);
   }

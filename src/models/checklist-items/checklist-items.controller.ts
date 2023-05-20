@@ -14,19 +14,23 @@ import {
   Patch,
   Post,
   Query,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 import { ChecklistItemsService } from './checklist-items.service';
 import { CreateChecklistItemDto } from './dto/create-checklist-item.dto';
 import { UpdateChecklistItemDto } from './dto/update-checklist-item.dto';
 import { ChecklistItem } from './entities/checklist-item.entity';
 import { ParamChecklistIdDto } from './dto/param-checklist-id.dto';
+import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
 
 @Controller('checklists')
 @UseInterceptors(HttpSuccessInterceptor)
+@UseGuards(JwtAuthGuard)
 @ApiTags('Checklist Item')
+@ApiBearerAuth()
 export class ChecklistItemsController {
   constructor(private readonly checklistItemsService: ChecklistItemsService) {}
 
