@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Checklist } from 'src/models/checklists/entities/checklist.entity';
+import { Checklist } from '../../../models/checklists/entities/checklist.entity';
 import {
   Column,
   CreateDateColumn,

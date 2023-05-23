@@ -1,13 +1,14 @@
 import * as bcrypt from 'bcrypt';
-import { UsersService } from 'src/models/users/users.service';
 
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { ILogin } from './interfaces/login.interface';
-import { User } from 'src/models/users/entities/user.entity';
-import { RegisterEmailDto } from './dto/register-email.dto';
+
+import { CreateUserDto } from '../models/users/dto/create-user.dto';
+import { User } from '../models/users/entities/user.entity';
+import { UsersService } from '../models/users/users.service';
 import { SALT_OR_ROUND } from './constants/brcrypt.constant';
-import { CreateUserDto } from 'src/models/users/dto/create-user.dto';
+import { RegisterEmailDto } from './dto/register-email.dto';
+import { ILogin } from './interfaces/login.interface';
 
 @Injectable()
 export class AuthenticationService {

@@ -7,13 +7,13 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { LocalAuthGuard } from 'src/common/guards/local-auth.guard';
+import { LocalAuthGuard } from '../common/guards/local-auth.guard';
 import { AuthenticationService } from './authentication.service';
-import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
-import { UsersService } from 'src/models/users/users.service';
+import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
+import { UsersService } from '../models/users/users.service';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { LoginEmailDto } from './dto/login-email.dto';
-import { ApiBaseResponse } from 'src/common/decorators/api-base-response.decorator';
+import { ApiBaseResponse } from '../common/decorators/api-base-response.decorator';
 import { LoginDto } from './dto/login.dto';
 import { RegisterEmailDto } from './dto/register-email.dto';
 

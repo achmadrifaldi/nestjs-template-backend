@@ -1,11 +1,11 @@
 import { paginate, Pagination } from 'nestjs-typeorm-paginate';
-import { QuerySortingHelper } from 'src/common/helpers/query-sorting.helper';
-import { IExtendPaginationOptions } from 'src/common/interfaces/extend-pagination-options.interface';
 import { Repository } from 'typeorm';
 
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
+import { QuerySortingHelper } from '../../common/helpers/query-sorting.helper';
+import { IExtendPaginationOptions } from '../../common/interfaces/extend-pagination-options.interface';
 import { SORTING_COLUMNS } from './constants/sorting-columns.constant';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
