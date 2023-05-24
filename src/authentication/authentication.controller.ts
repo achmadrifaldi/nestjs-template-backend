@@ -7,13 +7,15 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { LocalAuthGuard } from '../common/guards/local-auth.guard';
-import { AuthenticationService } from './authentication.service';
-import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
-import { UsersService } from '../models/users/users.service';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { LoginEmailDto } from './dto/login-email.dto';
+
 import { ApiBaseResponse } from '../common/decorators/api-base-response.decorator';
+import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
+import { LocalAuthGuard } from '../common/guards/local-auth.guard';
+import { User } from '../models/users/entities/user.entity';
+import { UsersService } from '../models/users/users.service';
+import { AuthenticationService } from './authentication.service';
+import { LoginEmailDto } from './dto/login-email.dto';
 import { LoginDto } from './dto/login.dto';
 import { RegisterEmailDto } from './dto/register-email.dto';
 
@@ -40,7 +42,7 @@ export class AuthenticationController {
   @ApiOperation({
     summary: 'Register with email',
   })
-  @ApiBaseResponse(LoginDto)
+  @ApiBaseResponse(User)
   async create(@Body() body: RegisterEmailDto) {
     return this.authenticationService.register(body);
   }
