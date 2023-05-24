@@ -43,7 +43,7 @@ export class ChecklistItemsService {
     let queryBuilder =
       this.checklistItemRepository.createQueryBuilder('checklistItems');
 
-    if (sortBy && sortBy.length) {
+    if (sortBy?.length) {
       queryBuilder = QuerySortingHelper(
         queryBuilder,
         options.sortBy,
