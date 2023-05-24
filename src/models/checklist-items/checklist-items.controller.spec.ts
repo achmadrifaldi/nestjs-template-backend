@@ -5,6 +5,7 @@ import { PostgresDatabaseProviderModule } from '../../providers/database/postgre
 import { ChecklistItemsController } from './checklist-items.controller';
 import { ChecklistItemsService } from './checklist-items.service';
 import { ChecklistItem } from './entities/checklist-item.entity';
+import { ChecklistsModule } from '../checklists/checklists.module';
 
 describe('ChecklistItemsController', () => {
   let controller: ChecklistItemsController;
@@ -14,6 +15,7 @@ describe('ChecklistItemsController', () => {
       imports: [
         PostgresDatabaseProviderModule,
         TypeOrmModule.forFeature([ChecklistItem]),
+        ChecklistsModule,
       ],
       controllers: [ChecklistItemsController],
       providers: [ChecklistItemsService],
