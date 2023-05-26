@@ -10,12 +10,14 @@ import { AuthenticationController } from './authentication.controller';
 import { AuthenticationService } from './authentication.service';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { LocalStrategy } from './strategies/local.strategy';
+import { MailModule } from 'src/mail/mail.module';
 
 @Module({
   imports: [
     JwtConfigModule,
     UsersModule,
     PassportModule,
+    MailModule,
     JwtModule.registerAsync({
       imports: [JwtConfigModule],
       useFactory: async (configService: JwtConfigService) => ({

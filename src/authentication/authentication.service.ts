@@ -1,8 +1,10 @@
 import * as bcrypt from 'bcrypt';
 
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 
+import { CreateMailDto } from '../mail/dto/create-mail.dto';
+import { MailService } from '../mail/mail.service';
 import { CreateUserDto } from '../models/users/dto/create-user.dto';
 import { User } from '../models/users/entities/user.entity';
 import { UsersService } from '../models/users/users.service';
@@ -12,7 +14,8 @@ import { ILogin } from './interfaces/login.interface';
 
 @Injectable()
 export class AuthenticationService {
-  constructor(private usersService: UsersService, private jwtService: JwtService) {}
+  private readonly logger = new Logger(this.constructor.name);
+  constructor(private usersService: UsersService, private jwtService: JwtService, private mailService: MailService) {}
 
   async validateUser(email: string, pass: string): Promise<User> {
     const user = await this.usersService.findOneByEmail(email);
@@ -51,6 +54,20 @@ export class AuthenticationService {
     createUserDto.password = passHash;
     createUserDto.name = name;
 
-    return await this.usersService.create(createUserDto);
+    const result = await this.usersService.create(createUserDto);
+
+    try {
+      const mailPayload = new CreateMailDto();
+      mailPayload.to = email;
+      mailPayload.subject = 'Welcome to our app';
+      mailPayload.data = {
+        name,
+      };
+      await this.mailService.sendWelcomeMail(mailPayload);
+    } catch (err) {
+      this.logger.error(err.message);
+    }
+
+    return result;
   }
 }

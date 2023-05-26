@@ -3,6 +3,7 @@ import { PassportModule } from '@nestjs/passport';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { JwtConfigModule } from '../config/jwt/config.module';
+import { MailService } from '../mail/mail.service';
 import { UsersService } from '../models/users/users.service';
 import { AuthenticationController } from './authentication.controller';
 import { AuthenticationService } from './authentication.service';
@@ -56,6 +57,12 @@ describe('AuthenticationController', () => {
               })
             ),
             remove: jest.fn(),
+          },
+        },
+        {
+          provide: MailService,
+          useValue: {
+            sendWelcomeMail: jest.fn().mockResolvedValue(true),
           },
         },
       ],

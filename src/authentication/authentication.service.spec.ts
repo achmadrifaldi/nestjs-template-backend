@@ -8,10 +8,12 @@ import { JwtConfigModule } from '../config/jwt/config.module';
 import { UsersService } from '../models/users/users.service';
 import { AuthenticationService } from './authentication.service';
 import { RegisterEmailDto } from './dto/register-email.dto';
+import { MailService } from '../mail/mail.service';
 
 describe('AuthenticationService', () => {
   let service: AuthenticationService;
   let userService: UsersService;
+  let mailService: MailService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -40,10 +42,17 @@ describe('AuthenticationService', () => {
             create: jest.fn().mockImplementation((user: UsersService) => Promise.resolve({ id: '1', ...user })),
           },
         },
+        {
+          provide: MailService,
+          useValue: {
+            sendWelcomeMail: jest.fn().mockResolvedValue(true),
+          },
+        },
       ],
     }).compile();
 
     userService = module.get<UsersService>(UsersService);
+    mailService = module.get<MailService>(MailService);
     service = module.get<AuthenticationService>(AuthenticationService);
   });
 
@@ -109,6 +118,7 @@ describe('AuthenticationService', () => {
 
     it('should return a user', async () => {
       jest.spyOn(userService, 'findOneByEmail').mockImplementation(() => null);
+      jest.spyOn(mailService, 'sendWelcomeMail').mockResolvedValue(true);
 
       const body = new RegisterEmailDto();
       body.name = 'user name';
@@ -119,6 +129,7 @@ describe('AuthenticationService', () => {
       expect(createUser.name).toBe(body.name);
       expect(createUser.email).toBe(body.email);
       expect(userService.create).toBeCalledTimes(1);
+      expect(mailService.sendWelcomeMail).toBeCalledTimes(1);
     });
   });
 });
