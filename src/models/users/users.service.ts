@@ -1,11 +1,11 @@
 import { paginate, Pagination } from 'nestjs-typeorm-paginate';
-import { QuerySortingHelper } from 'src/common/helpers/query-sorting.helper';
-import { IExtendPaginationOptions } from 'src/common/interfaces/extend-pagination-options.interface';
-import { Repository } from 'typeorm';
+import { Repository, UpdateResult } from 'typeorm';
 
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
+import { QuerySortingHelper } from '../../common/helpers/query-sorting.helper';
+import { IExtendPaginationOptions } from '../../common/interfaces/extend-pagination-options.interface';
 import { SORTING_COLUMNS } from './constants/sorting-columns.constant';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -30,7 +30,7 @@ export class UsersService {
 
     let queryBuilder = this.userRepository.createQueryBuilder('users');
 
-    if (sortBy && sortBy.length) {
+    if (sortBy?.length) {
       queryBuilder = QuerySortingHelper(
         queryBuilder,
         options.sortBy,
@@ -76,16 +76,14 @@ export class UsersService {
     return await this.userRepository.save(model);
   }
 
-  async remove(id: string): Promise<User> {
+  async remove(id: string): Promise<UpdateResult> {
     const user: User = await this.findOne(id);
 
-    const result = await this.userRepository
+    return await this.userRepository
       .createQueryBuilder('users')
       .softDelete()
       .where('id = :id', { id: user.id })
       .returning('*')
       .execute();
-
-    return result.raw[0];
   }
 }

@@ -9,5 +9,6 @@ import { ChecklistsModule } from '../checklists/checklists.module';
   imports: [TypeOrmModule.forFeature([ChecklistItem]), ChecklistsModule],
   controllers: [ChecklistItemsController],
   providers: [ChecklistItemsService],
+  exports: [ChecklistItemsService],
 })
 export class ChecklistItemsModule {}

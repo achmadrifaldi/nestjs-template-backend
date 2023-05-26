@@ -1,15 +1,15 @@
 import { paginate, Pagination } from 'nestjs-typeorm-paginate';
-import { Repository } from 'typeorm';
+import { Repository, UpdateResult } from 'typeorm';
 
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
+import { QuerySortingHelper } from '../../common/helpers/query-sorting.helper';
+import { IExtendPaginationOptions } from '../../common/interfaces/extend-pagination-options.interface';
+import { SORTING_COLUMNS } from './constants/sorting-columns.constant';
 import { CreateChecklistDto } from './dto/create-checklist.dto';
 import { UpdateChecklistDto } from './dto/update-checklist.dto';
 import { Checklist } from './entities/checklist.entity';
-import { IExtendPaginationOptions } from 'src/common/interfaces/extend-pagination-options.interface';
-import { SORTING_COLUMNS } from './constants/sorting-columns.constant';
-import { QuerySortingHelper } from 'src/common/helpers/query-sorting.helper';
 
 @Injectable()
 export class ChecklistsService {
@@ -72,16 +72,14 @@ export class ChecklistsService {
     return await this.checklistRepository.save(model);
   }
 
-  async remove(id: string): Promise<Checklist> {
+  async remove(id: string): Promise<UpdateResult> {
     const checklist: Checklist = await this.findOne(id);
 
-    const result = await this.checklistRepository
+    return await this.checklistRepository
       .createQueryBuilder('checklists')
       .softDelete()
       .where('id = :id', { id: checklist.id })
       .returning('*')
       .execute();
-
-    return result.raw[0];
   }
 }

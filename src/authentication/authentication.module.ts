@@ -1,6 +1,6 @@
-import { JwtConfigModule } from 'src/config/jwt/config.module';
-import { JwtConfigService } from 'src/config/jwt/config.services';
-import { UsersModule } from 'src/models/users/users.module';
+import { JwtConfigModule } from '../config/jwt/config.module';
+import { JwtConfigService } from '../config/jwt/config.services';
+import { UsersModule } from '../models/users/users.module';
 
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';

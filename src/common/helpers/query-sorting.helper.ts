@@ -6,15 +6,15 @@ export const QuerySortingHelper = (
   const builder = queryBuilder;
   sortBy.forEach((value) => {
     if (value) {
-      const [column, direction] = value.split('|');
+      const [column, direction] = value?.split('|');
 
-      const sortDirection =
-        direction === 'asc' || direction === 'desc'
-          ? `${direction}`.toUpperCase()
-          : 'ASC';
+      const sortDirection = ['asc', 'desc'].includes(direction)
+        ? `${direction}`.toUpperCase()
+        : 'ASC';
 
-      if (permitColumns[column])
+      if (permitColumns[column]) {
         builder.orderBy(permitColumns[column], sortDirection as 'ASC' | 'DESC');
+      }
     }
   });
 

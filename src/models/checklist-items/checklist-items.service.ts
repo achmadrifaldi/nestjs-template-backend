@@ -1,14 +1,16 @@
+import { paginate, Pagination } from 'nestjs-typeorm-paginate';
+import { Repository, UpdateResult } from 'typeorm';
+
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+
+import { QuerySortingHelper } from '../../common/helpers/query-sorting.helper';
+import { IExtendPaginationOptions } from '../../common/interfaces/extend-pagination-options.interface';
+import { ChecklistsService } from '../checklists/checklists.service';
+import { SORTING_COLUMNS } from './constants/sorting-columns.constant';
 import { CreateChecklistItemDto } from './dto/create-checklist-item.dto';
 import { UpdateChecklistItemDto } from './dto/update-checklist-item.dto';
-import { InjectRepository } from '@nestjs/typeorm';
 import { ChecklistItem } from './entities/checklist-item.entity';
-import { Repository } from 'typeorm';
-import { Pagination, paginate } from 'nestjs-typeorm-paginate';
-import { IExtendPaginationOptions } from 'src/common/interfaces/extend-pagination-options.interface';
-import { QuerySortingHelper } from 'src/common/helpers/query-sorting.helper';
-import { SORTING_COLUMNS } from './constants/sorting-columns.constant';
-import { ChecklistsService } from '../checklists/checklists.service';
 
 @Injectable()
 export class ChecklistItemsService {
@@ -41,7 +43,7 @@ export class ChecklistItemsService {
     let queryBuilder =
       this.checklistItemRepository.createQueryBuilder('checklistItems');
 
-    if (sortBy && sortBy.length) {
+    if (sortBy?.length) {
       queryBuilder = QuerySortingHelper(
         queryBuilder,
         options.sortBy,
@@ -89,16 +91,14 @@ export class ChecklistItemsService {
     return await this.checklistItemRepository.save(model);
   }
 
-  async remove(checklistId: string, id: string): Promise<ChecklistItem> {
+  async remove(checklistId: string, id: string): Promise<UpdateResult> {
     const checklistItem: ChecklistItem = await this.findOne(checklistId, id);
 
-    const result = await this.checklistItemRepository
+    return await this.checklistItemRepository
       .createQueryBuilder('checklistItems')
       .softDelete()
       .where('id = :id', { id: checklistItem.id })
       .returning('*')
       .execute();
-
-    return result.raw[0];
   }
 }

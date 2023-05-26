@@ -1,4 +1,3 @@
-import { ChecklistItem } from 'src/models/checklist-items/entities/checklist-item.entity';
 import {
   Column,
   CreateDateColumn,
@@ -11,6 +10,8 @@ import {
 } from 'typeorm';
 
 import { ApiProperty } from '@nestjs/swagger';
+
+import { ChecklistItem } from '../../../models/checklist-items/entities/checklist-item.entity';
 
 @Entity()
 export class Checklist {
