@@ -74,7 +74,7 @@ describe('AuthenticationController', () => {
     expect(controller).toBeDefined();
   });
 
-  describe('/authentication/login', () => {
+  describe('[POST] /authentication/login', () => {
     it('should return a accessToken', async () => {
       const body = new LoginEmailDto();
       body.email = 'email@test.com';
@@ -93,7 +93,7 @@ describe('AuthenticationController', () => {
     });
   });
 
-  describe('/authentication/register', () => {
+  describe('[POST] /authentication/register', () => {
     it('should return error email exists', async () => {
       const body = new RegisterEmailDto();
       body.name = 'user name';
@@ -120,10 +120,11 @@ describe('AuthenticationController', () => {
       const createUser = await controller.create(body);
       expect(createUser.name).toBe(body.name);
       expect(createUser.email).toBe(body.email);
+      expect(userService.create).toBeCalledTimes(1);
     });
   });
 
-  describe('/authentication/profile', () => {
+  describe('[GET] /authentication/profile', () => {
     it('should return a user', async () => {
       const request = {
         user: {

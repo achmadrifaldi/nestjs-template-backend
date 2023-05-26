@@ -7,6 +7,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { JwtConfigModule } from '../config/jwt/config.module';
 import { UsersService } from '../models/users/users.service';
 import { AuthenticationService } from './authentication.service';
+import { RegisterEmailDto } from './dto/register-email.dto';
 
 describe('AuthenticationService', () => {
   let service: AuthenticationService;
@@ -36,6 +37,11 @@ describe('AuthenticationService', () => {
                 id,
               }),
             ),
+            create: jest
+              .fn()
+              .mockImplementation((user: UsersService) =>
+                Promise.resolve({ id: '1', ...user }),
+              ),
           },
         },
       ],
@@ -75,6 +81,50 @@ describe('AuthenticationService', () => {
       jest.spyOn(bcrypt, 'compare').mockImplementation(() => true);
 
       expect(await service.validateUser(email, password)).toHaveProperty('id');
+    });
+  });
+
+  describe('login', () => {
+    it('should return a accessToken', async () => {
+      const request = {
+        user: {
+          id: '1',
+          name: 'user name',
+        },
+      };
+
+      expect(await service.login(request.user)).toHaveProperty('accessToken');
+    });
+  });
+
+  describe('register', () => {
+    it('should return error email exists', async () => {
+      const body = new RegisterEmailDto();
+      body.name = 'user name';
+      body.email = 'email@test.com';
+      body.password = 'secret';
+
+      try {
+        await service.register(body);
+      } catch (error) {
+        expect(error.message).toBe(
+          'Users with email email@test.com already exists',
+        );
+      }
+    });
+
+    it('should return a user', async () => {
+      jest.spyOn(userService, 'findOneByEmail').mockImplementation(() => null);
+
+      const body = new RegisterEmailDto();
+      body.name = 'user name';
+      body.email = 'email@test.com';
+      body.password = 'secret';
+
+      const createUser = await service.register(body);
+      expect(createUser.name).toBe(body.name);
+      expect(createUser.email).toBe(body.email);
+      expect(userService.create).toBeCalledTimes(1);
     });
   });
 });
