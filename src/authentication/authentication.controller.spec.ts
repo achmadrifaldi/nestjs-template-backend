@@ -30,11 +30,7 @@ describe('AuthenticationController', () => {
         {
           provide: UsersService,
           useValue: {
-            create: jest
-              .fn()
-              .mockImplementation((user: UsersService) =>
-                Promise.resolve({ id: '1', ...user }),
-              ),
+            create: jest.fn().mockImplementation((user: UsersService) => Promise.resolve({ id: '1', ...user })),
             findAll: jest.fn().mockResolvedValue([
               {
                 email: 'email #1',
@@ -50,14 +46,14 @@ describe('AuthenticationController', () => {
                 email: 'email #1',
                 name: 'name #1',
                 id,
-              }),
+              })
             ),
             findOneByEmail: jest.fn().mockImplementation((id: string) =>
               Promise.resolve({
                 email: 'email #1',
                 name: 'name #1',
                 id,
-              }),
+              })
             ),
             remove: jest.fn(),
           },
@@ -87,9 +83,7 @@ describe('AuthenticationController', () => {
         },
       };
 
-      expect(await controller.login(body, request)).toHaveProperty(
-        'accessToken',
-      );
+      expect(await controller.login(body, request)).toHaveProperty('accessToken');
     });
   });
 
@@ -103,9 +97,7 @@ describe('AuthenticationController', () => {
       try {
         await controller.create(body);
       } catch (error) {
-        expect(error.message).toBe(
-          'Users with email email@test.com already exists',
-        );
+        expect(error.message).toBe('Users with email email@test.com already exists');
       }
     });
 

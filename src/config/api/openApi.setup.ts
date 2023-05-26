@@ -2,10 +2,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppConfigService } from '../app/config.services';
 import { INestApplication } from '@nestjs/common';
 
-export const openApiSetup = (
-  app: INestApplication,
-  appConfig: AppConfigService,
-) => {
+export const openApiSetup = (app: INestApplication, appConfig: AppConfigService) => {
   /**
    * Swagger Config
    * https://docs.nestjs.com/openapi/introduction

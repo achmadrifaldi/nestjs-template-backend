@@ -35,13 +35,9 @@ describe('AuthenticationService', () => {
                 email: 'email #1',
                 name: 'name #1',
                 id,
-              }),
+              })
             ),
-            create: jest
-              .fn()
-              .mockImplementation((user: UsersService) =>
-                Promise.resolve({ id: '1', ...user }),
-              ),
+            create: jest.fn().mockImplementation((user: UsersService) => Promise.resolve({ id: '1', ...user })),
           },
         },
       ],
@@ -107,9 +103,7 @@ describe('AuthenticationService', () => {
       try {
         await service.register(body);
       } catch (error) {
-        expect(error.message).toBe(
-          'Users with email email@test.com already exists',
-        );
+        expect(error.message).toBe('Users with email email@test.com already exists');
       }
     });
 

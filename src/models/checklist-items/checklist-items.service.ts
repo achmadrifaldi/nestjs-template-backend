@@ -17,13 +17,10 @@ export class ChecklistItemsService {
   constructor(
     @InjectRepository(ChecklistItem)
     private readonly checklistItemRepository: Repository<ChecklistItem>,
-    private readonly checklistService: ChecklistsService,
+    private readonly checklistService: ChecklistsService
   ) {}
 
-  async create(
-    checklistId: string,
-    createChecklistItemDto: CreateChecklistItemDto,
-  ): Promise<ChecklistItem> {
+  async create(checklistId: string, createChecklistItemDto: CreateChecklistItemDto): Promise<ChecklistItem> {
     const { name } = createChecklistItemDto;
     const checklist = await this.checklistService.findOne(checklistId);
 
@@ -34,21 +31,13 @@ export class ChecklistItemsService {
     return await this.checklistItemRepository.save(model);
   }
 
-  async findAll(
-    checklistId: string,
-    options: IExtendPaginationOptions,
-  ): Promise<Pagination<ChecklistItem>> {
+  async findAll(checklistId: string, options: IExtendPaginationOptions): Promise<Pagination<ChecklistItem>> {
     const { sortBy, search } = options;
 
-    let queryBuilder =
-      this.checklistItemRepository.createQueryBuilder('checklistItems');
+    let queryBuilder = this.checklistItemRepository.createQueryBuilder('checklistItems');
 
     if (sortBy?.length) {
-      queryBuilder = QuerySortingHelper(
-        queryBuilder,
-        options.sortBy,
-        SORTING_COLUMNS,
-      );
+      queryBuilder = QuerySortingHelper(queryBuilder, options.sortBy, SORTING_COLUMNS);
     }
 
     if (search) {
@@ -77,16 +66,12 @@ export class ChecklistItemsService {
   async update(
     checklistId: string,
     id: string,
-    updateChecklistItemDto: UpdateChecklistItemDto,
+    updateChecklistItemDto: UpdateChecklistItemDto
   ): Promise<ChecklistItem> {
     const checklistItem: ChecklistItem = await this.findOne(checklistId, id);
 
     const model = new ChecklistItem();
-    this.checklistItemRepository.merge(
-      model,
-      { ...checklistItem },
-      updateChecklistItemDto,
-    );
+    this.checklistItemRepository.merge(model, { ...checklistItem }, updateChecklistItemDto);
 
     return await this.checklistItemRepository.save(model);
   }

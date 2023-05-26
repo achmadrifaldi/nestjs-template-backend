@@ -2,18 +2,7 @@ import { Pagination } from 'nestjs-typeorm-paginate';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { HttpSuccessInterceptor } from '../../common/interceptors/http-success.interceptor';
 
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Patch,
-  Post,
-  Query,
-  UseGuards,
-  UseInterceptors,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards, UseInterceptors } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 import { ApiBaseResponse } from '../../common/decorators/api-base-response.decorator';
@@ -74,10 +63,7 @@ export class ChecklistsController {
     summary: 'Update checklist by ID',
   })
   @ApiBaseResponse(Checklist)
-  update(
-    @Param() param: ParamIdDto,
-    @Body() updateChecklistDto: UpdateChecklistDto,
-  ) {
+  update(@Param() param: ParamIdDto, @Body() updateChecklistDto: UpdateChecklistDto) {
     const { id } = param;
     return this.checklistsService.update(id, updateChecklistDto);
   }

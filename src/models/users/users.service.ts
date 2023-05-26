@@ -15,7 +15,7 @@ import { User } from './entities/user.entity';
 export class UsersService {
   constructor(
     @InjectRepository(User)
-    private readonly userRepository: Repository<User>,
+    private readonly userRepository: Repository<User>
   ) {}
 
   async create(createUserDto: CreateUserDto): Promise<User> {
@@ -31,11 +31,7 @@ export class UsersService {
     let queryBuilder = this.userRepository.createQueryBuilder('users');
 
     if (sortBy?.length) {
-      queryBuilder = QuerySortingHelper(
-        queryBuilder,
-        options.sortBy,
-        SORTING_COLUMNS,
-      );
+      queryBuilder = QuerySortingHelper(queryBuilder, options.sortBy, SORTING_COLUMNS);
     }
 
     if (search) {

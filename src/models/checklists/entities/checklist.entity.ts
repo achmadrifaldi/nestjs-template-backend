@@ -23,7 +23,7 @@ export class Checklist {
   @Column({ type: 'varchar', length: 100 })
   name: string;
 
-  @OneToMany(() => ChecklistItem, (checklistItem) => checklistItem.checklist, {
+  @OneToMany(() => ChecklistItem, checklistItem => checklistItem.checklist, {
     cascade: true,
   })
   checklistItems: ChecklistItem[];

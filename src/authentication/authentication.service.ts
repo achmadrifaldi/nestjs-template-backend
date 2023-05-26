@@ -12,10 +12,7 @@ import { ILogin } from './interfaces/login.interface';
 
 @Injectable()
 export class AuthenticationService {
-  constructor(
-    private usersService: UsersService,
-    private jwtService: JwtService,
-  ) {}
+  constructor(private usersService: UsersService, private jwtService: JwtService) {}
 
   async validateUser(email: string, pass: string): Promise<User> {
     const user = await this.usersService.findOneByEmail(email);

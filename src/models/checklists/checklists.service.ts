@@ -15,7 +15,7 @@ import { Checklist } from './entities/checklist.entity';
 export class ChecklistsService {
   constructor(
     @InjectRepository(Checklist)
-    private readonly checklistRepository: Repository<Checklist>,
+    private readonly checklistRepository: Repository<Checklist>
   ) {}
 
   async create(createChecklistDto: CreateChecklistDto): Promise<Checklist> {
@@ -25,20 +25,13 @@ export class ChecklistsService {
     return await this.checklistRepository.save(model);
   }
 
-  async findAll(
-    options: IExtendPaginationOptions,
-  ): Promise<Pagination<Checklist>> {
+  async findAll(options: IExtendPaginationOptions): Promise<Pagination<Checklist>> {
     const { sortBy, search } = options;
 
-    let queryBuilder =
-      this.checklistRepository.createQueryBuilder('checklists');
+    let queryBuilder = this.checklistRepository.createQueryBuilder('checklists');
 
     if (sortBy && sortBy.length) {
-      queryBuilder = QuerySortingHelper(
-        queryBuilder,
-        options.sortBy,
-        SORTING_COLUMNS,
-      );
+      queryBuilder = QuerySortingHelper(queryBuilder, options.sortBy, SORTING_COLUMNS);
     }
 
     if (search) {
@@ -60,10 +53,7 @@ export class ChecklistsService {
     return checklist;
   }
 
-  async update(
-    id: string,
-    updateChecklistDto: UpdateChecklistDto,
-  ): Promise<Checklist> {
+  async update(id: string, updateChecklistDto: UpdateChecklistDto): Promise<Checklist> {
     const checklist: Checklist = await this.findOne(id);
 
     const model = new Checklist();

@@ -2,9 +2,7 @@ import { applyDecorators, Type } from '@nestjs/common';
 import { ApiExtraModels, ApiOkResponse, getSchemaPath } from '@nestjs/swagger';
 import { Pagination } from 'nestjs-typeorm-paginate';
 
-export const ApiPaginatedResponse = <TModel extends Type<any>>(
-  model: TModel,
-) => {
+export const ApiPaginatedResponse = <TModel extends Type<any>>(model: TModel) => {
   return applyDecorators(
     ApiExtraModels(Pagination),
     ApiExtraModels(model),
@@ -60,6 +58,6 @@ export const ApiPaginatedResponse = <TModel extends Type<any>>(
           },
         ],
       },
-    }),
+    })
   );
 };

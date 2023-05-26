@@ -31,6 +31,6 @@ export const ApiBaseResponse = <TModel extends Type<any>>(model: TModel) => {
           },
         ],
       },
-    }),
+    })
   );
 };

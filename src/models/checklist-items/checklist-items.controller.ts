@@ -1,17 +1,6 @@
 import { Pagination } from 'nestjs-typeorm-paginate';
 
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Patch,
-  Post,
-  Query,
-  UseGuards,
-  UseInterceptors,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards, UseInterceptors } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 import { ApiBaseResponse } from '../../common/decorators/api-base-response.decorator';
@@ -40,15 +29,9 @@ export class ChecklistItemsController {
     summary: 'Create checklist item',
   })
   @ApiBaseResponse(ChecklistItem)
-  create(
-    @Param() paramChecklist: ParamChecklistIdDto,
-    @Body() createChecklistItemDto: CreateChecklistItemDto,
-  ) {
+  create(@Param() paramChecklist: ParamChecklistIdDto, @Body() createChecklistItemDto: CreateChecklistItemDto) {
     const { checklistId } = paramChecklist;
-    return this.checklistItemsService.create(
-      checklistId,
-      createChecklistItemDto,
-    );
+    return this.checklistItemsService.create(checklistId, createChecklistItemDto);
   }
 
   @Get(':checklistId/checklist-items')
@@ -58,7 +41,7 @@ export class ChecklistItemsController {
   @ApiPaginatedResponse(ChecklistItem)
   findAll(
     @Param() paramChecklist: ParamChecklistIdDto,
-    @Query() query: PaginationQueryDto,
+    @Query() query: PaginationQueryDto
   ): Promise<Pagination<ChecklistItem>> {
     const { checklistId } = paramChecklist;
     const { page, limit, sortBy, search } = query;
@@ -76,10 +59,7 @@ export class ChecklistItemsController {
     summary: 'Get one checklist item by ID',
   })
   @ApiBaseResponse(ChecklistItem)
-  findOne(
-    @Param() paramChecklist: ParamChecklistIdDto,
-    @Param() param: ParamIdDto,
-  ) {
+  findOne(@Param() paramChecklist: ParamChecklistIdDto, @Param() param: ParamIdDto) {
     const { checklistId } = paramChecklist;
     const { id } = param;
     return this.checklistItemsService.findOne(checklistId, id);
@@ -93,15 +73,11 @@ export class ChecklistItemsController {
   update(
     @Param() paramChecklist: ParamChecklistIdDto,
     @Param() param: ParamIdDto,
-    @Body() updateChecklistItemDto: UpdateChecklistItemDto,
+    @Body() updateChecklistItemDto: UpdateChecklistItemDto
   ) {
     const { checklistId } = paramChecklist;
     const { id } = param;
-    return this.checklistItemsService.update(
-      checklistId,
-      id,
-      updateChecklistItemDto,
-    );
+    return this.checklistItemsService.update(checklistId, id, updateChecklistItemDto);
   }
 
   @Delete(':checklistId/checklist-items/:id')
@@ -109,10 +85,7 @@ export class ChecklistItemsController {
     summary: 'Delete checklist item by ID',
   })
   @ApiBaseResponse(UpdateResult)
-  remove(
-    @Param() paramChecklist: ParamChecklistIdDto,
-    @Param() param: ParamIdDto,
-  ) {
+  remove(@Param() paramChecklist: ParamChecklistIdDto, @Param() param: ParamIdDto) {
     const { checklistId } = paramChecklist;
     const { id } = param;
     return this.checklistItemsService.remove(checklistId, id);

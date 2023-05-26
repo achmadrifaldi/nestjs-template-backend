@@ -1,12 +1,4 @@
-import {
-  Body,
-  Controller,
-  Get,
-  HttpCode,
-  Post,
-  Req,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Post, Req, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 import { ApiBaseResponse } from '../common/decorators/api-base-response.decorator';
@@ -22,10 +14,7 @@ import { RegisterEmailDto } from './dto/register-email.dto';
 @Controller('authentication')
 @ApiTags('Authentication')
 export class AuthenticationController {
-  constructor(
-    private authenticationService: AuthenticationService,
-    private usersService: UsersService,
-  ) {}
+  constructor(private authenticationService: AuthenticationService, private usersService: UsersService) {}
 
   @Post('login')
   @HttpCode(200)

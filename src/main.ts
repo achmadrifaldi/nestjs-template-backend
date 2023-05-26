@@ -2,11 +2,7 @@ import { NestFactory, Reflector } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { AppConfigService } from './config/app/config.services';
 import { openApiSetup } from './config/api/openApi.setup';
-import {
-  ClassSerializerInterceptor,
-  INestApplication,
-  ValidationPipe,
-} from '@nestjs/common';
+import { ClassSerializerInterceptor, INestApplication, ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app: INestApplication = await NestFactory.create(AppModule);
@@ -30,10 +26,7 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
 
   await app.listen(appConfig.appPort, appConfig.appHost, () => {
-    console.log(
-      `[${appConfig.appName} ${appConfig.appEnv}]`,
-      `//${appConfig.appHost}:${appConfig.appPort}`,
-    );
+    console.log(`[${appConfig.appName} ${appConfig.appEnv}]`, `//${appConfig.appHost}:${appConfig.appPort}`);
   });
 }
 bootstrap();

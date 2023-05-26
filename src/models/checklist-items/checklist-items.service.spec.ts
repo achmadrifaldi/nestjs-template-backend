@@ -142,9 +142,7 @@ describe('ChecklistItemsService', () => {
     }).compile();
 
     service = module.get<ChecklistItemsService>(ChecklistItemsService);
-    repo = module.get<Repository<ChecklistItem>>(
-      getRepositoryToken(ChecklistItem),
-    );
+    repo = module.get<Repository<ChecklistItem>>(getRepositoryToken(ChecklistItem));
   });
 
   it('should be defined', () => {
@@ -196,9 +194,7 @@ describe('ChecklistItemsService', () => {
       try {
         await service.findOne('uuid', 'another uuid');
       } catch (error) {
-        expect(error.message).toBe(
-          'Checklist Item with id another uuid not found.',
-        );
+        expect(error.message).toBe('Checklist Item with id another uuid not found.');
       }
     });
   });
@@ -220,9 +216,7 @@ describe('ChecklistItemsService', () => {
       try {
         await service.update('checklist uuid', 'another uuid', payload);
       } catch (error) {
-        expect(error.message).toBe(
-          'Checklist Item with id another uuid not found.',
-        );
+        expect(error.message).toBe('Checklist Item with id another uuid not found.');
       }
     });
   });
@@ -236,9 +230,7 @@ describe('ChecklistItemsService', () => {
       try {
         await service.remove('checklist uuid', 'another uuid');
       } catch (error) {
-        expect(error.message).toBe(
-          'Checklist Item with id another uuid not found.',
-        );
+        expect(error.message).toBe('Checklist Item with id another uuid not found.');
       }
     });
   });

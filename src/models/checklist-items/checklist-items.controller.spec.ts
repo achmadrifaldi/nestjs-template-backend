@@ -150,9 +150,7 @@ describe('ChecklistItemsController', () => {
     controller = module.get<ChecklistItemsController>(ChecklistItemsController);
 
     checklistService = module.get<ChecklistsService>(ChecklistsService);
-    repo = module.get<Repository<ChecklistItem>>(
-      getRepositoryToken(ChecklistItem),
-    );
+    repo = module.get<Repository<ChecklistItem>>(getRepositoryToken(ChecklistItem));
   });
 
   it('should be defined', () => {
@@ -227,9 +225,7 @@ describe('ChecklistItemsController', () => {
       try {
         await controller.findOne(params, payload);
       } catch (error) {
-        expect(error.message).toBe(
-          'Checklist Item with id another uuid not found.',
-        );
+        expect(error.message).toBe('Checklist Item with id another uuid not found.');
       }
     });
   });
@@ -265,9 +261,7 @@ describe('ChecklistItemsController', () => {
       try {
         await controller.update(params, payload, body);
       } catch (error) {
-        expect(error.message).toBe(
-          'Checklist Item with id another uuid not found.',
-        );
+        expect(error.message).toBe('Checklist Item with id another uuid not found.');
       }
     });
   });
@@ -295,9 +289,7 @@ describe('ChecklistItemsController', () => {
       try {
         await controller.remove(params, payload);
       } catch (error) {
-        expect(error.message).toBe(
-          'Checklist Item with id another uuid not found.',
-        );
+        expect(error.message).toBe('Checklist Item with id another uuid not found.');
       }
     });
   });
