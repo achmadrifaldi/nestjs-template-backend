@@ -1,5 +1,5 @@
 import { paginate, Pagination } from 'nestjs-typeorm-paginate';
-import { Repository } from 'typeorm';
+import { Repository, UpdateResult } from 'typeorm';
 
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -72,16 +72,14 @@ export class ChecklistsService {
     return await this.checklistRepository.save(model);
   }
 
-  async remove(id: string): Promise<Checklist> {
+  async remove(id: string): Promise<UpdateResult> {
     const checklist: Checklist = await this.findOne(id);
 
-    const result = await this.checklistRepository
+    return await this.checklistRepository
       .createQueryBuilder('checklists')
       .softDelete()
       .where('id = :id', { id: checklist.id })
       .returning('*')
       .execute();
-
-    return result.raw[0];
   }
 }

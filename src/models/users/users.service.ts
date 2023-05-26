@@ -1,5 +1,5 @@
 import { paginate, Pagination } from 'nestjs-typeorm-paginate';
-import { Repository } from 'typeorm';
+import { Repository, UpdateResult } from 'typeorm';
 
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -30,7 +30,7 @@ export class UsersService {
 
     let queryBuilder = this.userRepository.createQueryBuilder('users');
 
-    if (sortBy && sortBy.length) {
+    if (sortBy?.length) {
       queryBuilder = QuerySortingHelper(
         queryBuilder,
         options.sortBy,
@@ -76,16 +76,14 @@ export class UsersService {
     return await this.userRepository.save(model);
   }
 
-  async remove(id: string): Promise<User> {
+  async remove(id: string): Promise<UpdateResult> {
     const user: User = await this.findOne(id);
 
-    const result = await this.userRepository
+    return await this.userRepository
       .createQueryBuilder('users')
       .softDelete()
       .where('id = :id', { id: user.id })
       .returning('*')
       .execute();
-
-    return result.raw[0];
   }
 }

@@ -5,14 +5,16 @@ export const QuerySortingHelper = (
 ) => {
   const builder = queryBuilder;
   sortBy.forEach((value) => {
-    const [column, direction] = value.split('|');
+    if (value) {
+      const [column, direction] = value?.split('|');
 
-    const sortDirection = ['asc', 'desc'].includes(direction)
-      ? `${direction}`.toUpperCase()
-      : 'ASC';
+      const sortDirection = ['asc', 'desc'].includes(direction)
+        ? `${direction}`.toUpperCase()
+        : 'ASC';
 
-    if (permitColumns[column]) {
-      builder.orderBy(permitColumns[column], sortDirection as 'ASC' | 'DESC');
+      if (permitColumns[column]) {
+        builder.orderBy(permitColumns[column], sortDirection as 'ASC' | 'DESC');
+      }
     }
   });
 

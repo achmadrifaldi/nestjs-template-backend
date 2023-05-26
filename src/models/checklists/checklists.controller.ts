@@ -24,6 +24,7 @@ import { ChecklistsService } from './checklists.service';
 import { CreateChecklistDto } from './dto/create-checklist.dto';
 import { UpdateChecklistDto } from './dto/update-checklist.dto';
 import { Checklist } from './entities/checklist.entity';
+import { UpdateResult } from 'typeorm';
 
 @Controller('checklists')
 @UseInterceptors(HttpSuccessInterceptor)
@@ -85,7 +86,7 @@ export class ChecklistsController {
   @ApiOperation({
     summary: 'Delete checklist by ID',
   })
-  @ApiBaseResponse(Checklist)
+  @ApiBaseResponse(UpdateResult)
   remove(@Param() param: ParamIdDto) {
     const { id } = param;
     return this.checklistsService.remove(id);

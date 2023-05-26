@@ -29,33 +29,30 @@ export const ApiPaginatedResponse = <TModel extends Type<any>>(
             properties: {
               data: {
                 type: 'object',
-                items: { $ref: getSchemaPath(Pagination) },
-              },
-            },
-          },
-          {
-            properties: {
-              items: {
-                type: 'array',
-                items: { $ref: getSchemaPath(model) },
-              },
-              meta: {
-                type: 'object',
                 properties: {
-                  totalItems: {
-                    type: 'number',
+                  items: {
+                    type: 'array',
+                    items: { $ref: getSchemaPath(model) },
                   },
-                  itemCount: {
-                    type: 'number',
-                  },
-                  itemsPerPage: {
-                    type: 'number',
-                  },
-                  totalPages: {
-                    type: 'number',
-                  },
-                  currentPage: {
-                    type: 'number',
+                  meta: {
+                    type: 'object',
+                    properties: {
+                      totalItems: {
+                        type: 'number',
+                      },
+                      itemCount: {
+                        type: 'number',
+                      },
+                      itemsPerPage: {
+                        type: 'number',
+                      },
+                      totalPages: {
+                        type: 'number',
+                      },
+                      currentPage: {
+                        type: 'number',
+                      },
+                    },
                   },
                 },
               },
