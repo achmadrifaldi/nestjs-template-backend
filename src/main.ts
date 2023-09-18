@@ -1,8 +1,9 @@
-import { NestFactory, Reflector } from '@nestjs/core';
-import { AppModule } from './app.module';
-import { AppConfigService } from './config/app/config.services';
-import { openApiSetup } from './config/api/openApi.setup';
 import { ClassSerializerInterceptor, INestApplication, ValidationPipe } from '@nestjs/common';
+import { NestFactory, Reflector } from '@nestjs/core';
+
+import { AppConfigService } from './config/app/config.services';
+import { AppModule } from './app.module';
+import { openApiSetup } from './config/api/openApi.setup';
 
 async function bootstrap() {
   const app: INestApplication = await NestFactory.create(AppModule);
@@ -24,6 +25,11 @@ async function bootstrap() {
    * Global Validation
    */
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
+
+  /**
+   * Enable Cors
+   */
+  app.enableCors();
 
   await app.listen(appConfig.appPort, appConfig.appHost, () => {
     console.log(`[${appConfig.appName} ${appConfig.appEnv}]`, `//${appConfig.appHost}:${appConfig.appPort}`);
