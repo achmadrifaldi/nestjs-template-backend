@@ -12,6 +12,11 @@ async function bootstrap() {
   const appConfig: AppConfigService = app.get(AppConfigService);
 
   /**
+   * Global Prefix
+   */
+  app.setGlobalPrefix('api');
+
+  /**
    * Set Swagger
    */
   openApiSetup(app, appConfig);
