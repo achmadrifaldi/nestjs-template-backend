@@ -4,12 +4,12 @@ import { Repository, UpdateResult } from 'typeorm';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
-import { QuerySortingHelper } from '../../common/helpers/query-sorting.helper';
-import { IExtendPaginationOptions } from '../../common/interfaces/extend-pagination-options.interface';
-import { SORTING_COLUMNS } from './constants/sorting-columns.constant';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
-import { User } from './entities/user.entity';
+import { QuerySortingHelper } from '../../../common/helpers/query-sorting.helper';
+import { IExtendPaginationOptions } from '../../../common/interfaces/extend-pagination-options.interface';
+import { SORTING_COLUMNS } from '../constants/sorting-columns.constant';
+import { CreateUserDto } from '../dto/create-user.dto';
+import { UpdateUserDto } from '../dto/update-user.dto';
+import { User } from '../entities/user.entity';
 
 @Injectable()
 export class UsersService {

@@ -1,15 +1,15 @@
 import { Body, Controller, Get, HttpCode, Post, Req, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 
-import { ApiBaseResponse } from '../common/decorators/api-base-response.decorator';
-import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
-import { LocalAuthGuard } from '../common/guards/local-auth.guard';
-import { User } from '../models/users/entities/user.entity';
-import { UsersService } from '../models/users/users.service';
-import { AuthenticationService } from './authentication.service';
-import { LoginEmailDto } from './dto/login-email.dto';
-import { LoginDto } from './dto/login.dto';
-import { RegisterEmailDto } from './dto/register-email.dto';
+import { ApiBaseResponse } from '../../common/decorators/api-base-response.decorator';
+import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
+import { LocalAuthGuard } from '../../common/guards/local-auth.guard';
+import { User } from '../../modules/users/entities/user.entity';
+import { UsersService } from '../../modules/users/providers/users.service';
+import { AuthenticationService } from '../providers/authentication.service';
+import { LoginEmailDto } from '../dto/login-email.dto';
+import { LoginDto } from '../dto/login.dto';
+import { RegisterEmailDto } from '../dto/register-email.dto';
 
 @Controller('authentication')
 @ApiTags('Authentication')

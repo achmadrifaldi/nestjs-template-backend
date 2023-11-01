@@ -2,12 +2,12 @@ import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { JwtConfigModule } from '../config/jwt/config.module';
-import { UsersService } from '../models/users/users.service';
+import { JwtConfigModule } from '../../config/jwt/config.module';
+import { UsersService } from '../../modules/users/providers/users.service';
 import { AuthenticationController } from './authentication.controller';
-import { AuthenticationService } from './authentication.service';
-import { LoginEmailDto } from './dto/login-email.dto';
-import { RegisterEmailDto } from './dto/register-email.dto';
+import { AuthenticationService } from '../providers/authentication.service';
+import { LoginEmailDto } from '../dto/login-email.dto';
+import { RegisterEmailDto } from '../dto/register-email.dto';
 
 describe('AuthenticationController', () => {
   let controller: AuthenticationController;

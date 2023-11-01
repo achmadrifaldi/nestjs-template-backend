@@ -1,15 +1,10 @@
-import { PaginationQueryDto } from '../../common/dto/pagination-query.dto';
-import { ParamIdDto } from '../../common/dto/param-id.dto';
-import { Repository } from 'typeorm';
-
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-
-import { ChecklistsController } from './checklists.controller';
 import { ChecklistsService } from './checklists.service';
-import { CreateChecklistDto } from './dto/create-checklist.dto';
-import { UpdateChecklistDto } from './dto/update-checklist.dto';
-import { Checklist } from './entities/checklist.entity';
+import { Checklist } from '../entities/checklist.entity';
+import { Repository } from 'typeorm';
+import { CreateChecklistDto } from '../dto/create-checklist.dto';
+import { UpdateChecklistDto } from '../dto/update-checklist.dto';
 
 jest.mock('nestjs-typeorm-paginate', () => ({
   paginate: jest.fn().mockResolvedValue({
@@ -101,13 +96,12 @@ const createQueryBuilder: any = {
     }),
 };
 
-describe('ChecklistsController', () => {
-  let controller: ChecklistsController;
+describe('ChecklistsService', () => {
+  let service: ChecklistsService;
   let repo: Repository<Checklist>;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      controllers: [ChecklistsController],
       providers: [
         ChecklistsService,
         {
@@ -129,117 +123,94 @@ describe('ChecklistsController', () => {
       ],
     }).compile();
 
-    controller = module.get<ChecklistsController>(ChecklistsController);
+    service = module.get<ChecklistsService>(ChecklistsService);
     repo = module.get<Repository<Checklist>>(getRepositoryToken(Checklist));
   });
 
   it('should be defined', () => {
-    expect(controller).toBeDefined();
+    expect(service).toBeDefined();
   });
 
-  describe('[POST] /checklists', () => {
-    it('should be create a checklist items', async () => {
+  describe('create', () => {
+    it('should be create a user', async () => {
       const payload = new CreateChecklistDto();
       payload.name = 'item name';
 
-      await controller.create(payload);
+      await service.create(payload);
+
       expect(repo.save).toBeCalledTimes(1);
     });
   });
 
-  describe('[GET] /checklists', () => {
+  describe('findAll', () => {
     it('should be return list', async () => {
-      const payload = new PaginationQueryDto();
-
-      const result = await controller.findAll(payload);
-      expect(repo.createQueryBuilder).toBeCalledTimes(1);
+      const result = await service.findAll({
+        limit: 10,
+        page: 1,
+        search: null,
+        sortBy: null,
+      });
       expect(result).toHaveProperty('items');
-      expect(result).toHaveProperty('meta');
+      expect(result.items.length).toBe(2);
     });
 
     it('should be return list when filter active', async () => {
-      const payload = new PaginationQueryDto();
-      payload.limit = 10;
-      payload.page = 1;
-      payload.search = 'something';
-      payload.sortBy = ['name|asc'];
-
-      const result = await controller.findAll(payload);
-      expect(repo.createQueryBuilder).toBeCalledTimes(1);
+      const result = await service.findAll({
+        limit: 10,
+        page: 1,
+        search: 'something',
+        sortBy: ['name|asc'],
+      });
       expect(result).toHaveProperty('items');
-      expect(result).toHaveProperty('meta');
+      expect(result.items.length).toBe(2);
     });
   });
 
-  describe('[GET] /checklists/:id', () => {
+  describe('findOne', () => {
     it('should be return a checklist item', async () => {
-      const payload = new ParamIdDto();
-      payload.id = 'another uuid';
-
-      const result = await controller.findOne(payload);
-      expect(repo.findOne).toBeCalledTimes(1);
+      const result = await service.findOne('uuid');
       expect(result).toHaveProperty('id');
-      expect(result).toHaveProperty('name');
     });
 
     it('should be return exception when id not found', async () => {
-      const payload = new ParamIdDto();
-      payload.id = 'another uuid';
-
       try {
-        await controller.findOne(payload);
+        await service.findOne('another uuid');
       } catch (error) {
         expect(error.message).toBe('Checklist with id another uuid not found.');
       }
     });
   });
 
-  describe('[PATCH] /checklists/:id', () => {
-    it('should be updated', async () => {
-      const payload = new ParamIdDto();
-      payload.id = 'another uuid';
+  describe('update', () => {
+    it('should be update a user', async () => {
+      const payload = new UpdateChecklistDto();
+      payload.name = 'another name';
 
-      const body = new UpdateChecklistDto();
-      body.name = 'checklist name';
+      await service.update('uuid', payload);
 
-      const result = await controller.update(payload, body);
-      expect(repo.findOne).toBeCalledTimes(1);
       expect(repo.save).toBeCalledTimes(1);
-      expect(result).toHaveProperty('id');
-      expect(result).toHaveProperty('name');
     });
 
-    it('should be return exception when id not found', async () => {
-      const payload = new ParamIdDto();
-      payload.id = 'another uuid';
-
-      const body = new UpdateChecklistDto();
-      body.name = 'checklist name';
+    it('should be return exception when Checklist not found', async () => {
+      const payload = new UpdateChecklistDto();
+      payload.name = 'Checklist name';
 
       try {
-        await controller.update(payload, body);
+        await service.update('another uuid', payload);
       } catch (error) {
         expect(error.message).toBe('Checklist with id another uuid not found.');
       }
     });
   });
 
-  describe('[DELETE] /checklists/:id', () => {
-    it('should be updated', async () => {
-      const payload = new ParamIdDto();
-      payload.id = 'another uuid';
-
-      const result = await controller.remove(payload);
-      expect(result).toHaveProperty('raw');
-      expect(result).toHaveProperty('affected');
+  describe('remove', () => {
+    it('should be update a checklist', async () => {
+      expect(await service.remove('uuid')).toBeTruthy();
     });
 
-    it('should be return exception when id not found', async () => {
-      const payload = new ParamIdDto();
-      payload.id = 'another uuid';
-
+    it('should be return exception when Checklist not found', async () => {
       try {
-        await controller.remove(payload);
+        await service.remove('another uuid');
       } catch (error) {
         expect(error.message).toBe('Checklist with id another uuid not found.');
       }

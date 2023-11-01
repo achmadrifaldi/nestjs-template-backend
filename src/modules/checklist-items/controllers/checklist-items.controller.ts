@@ -3,17 +3,17 @@ import { Pagination } from 'nestjs-typeorm-paginate';
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards, UseInterceptors } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 
-import { ApiBaseResponse } from '../../common/decorators/api-base-response.decorator';
-import { ApiPaginatedResponse } from '../../common/decorators/api-paginate-response.decorator';
-import { PaginationQueryDto } from '../../common/dto/pagination-query.dto';
-import { ParamIdDto } from '../../common/dto/param-id.dto';
-import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
-import { HttpSuccessInterceptor } from '../../common/interceptors/http-success.interceptor';
-import { ChecklistItemsService } from './checklist-items.service';
-import { CreateChecklistItemDto } from './dto/create-checklist-item.dto';
-import { ParamChecklistIdDto } from './dto/param-checklist-id.dto';
-import { UpdateChecklistItemDto } from './dto/update-checklist-item.dto';
-import { ChecklistItem } from './entities/checklist-item.entity';
+import { ApiBaseResponse } from '../../../common/decorators/api-base-response.decorator';
+import { ApiPaginatedResponse } from '../../../common/decorators/api-paginate-response.decorator';
+import { PaginationQueryDto } from '../../../common/dto/pagination-query.dto';
+import { ParamIdDto } from '../../../common/dto/param-id.dto';
+import { JwtAuthGuard } from '../../../common/guards/jwt-auth.guard';
+import { HttpSuccessInterceptor } from '../../../common/interceptors/http-success.interceptor';
+import { ChecklistItemsService } from '../providers/checklist-items.service';
+import { CreateChecklistItemDto } from '../dto/create-checklist-item.dto';
+import { ParamChecklistIdDto } from '../dto/param-checklist-id.dto';
+import { UpdateChecklistItemDto } from '../dto/update-checklist-item.dto';
+import { ChecklistItem } from '../entities/checklist-item.entity';
 import { UpdateResult } from 'typeorm';
 
 @Controller('checklists')

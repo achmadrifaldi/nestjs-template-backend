@@ -1,10 +1,13 @@
+import { Repository } from 'typeorm';
+
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { ChecklistsService } from './checklists.service';
-import { Checklist } from './entities/checklist.entity';
-import { Repository } from 'typeorm';
-import { CreateChecklistDto } from './dto/create-checklist.dto';
-import { UpdateChecklistDto } from './dto/update-checklist.dto';
+
+import { ChecklistsService } from '../../checklists/providers/checklists.service';
+import { ChecklistItemsService } from './checklist-items.service';
+import { CreateChecklistItemDto } from '../dto/create-checklist-item.dto';
+import { UpdateChecklistItemDto } from '../dto/update-checklist-item.dto';
+import { ChecklistItem } from '../entities/checklist-item.entity';
 
 jest.mock('nestjs-typeorm-paginate', () => ({
   paginate: jest.fn().mockResolvedValue({
@@ -44,6 +47,15 @@ const oneChecklist = {
   version: 1,
 };
 
+const oneChecklistItem = {
+  id: '195f5bf5-cf4e-4be9-8d85-0e19ded3fcc9',
+  name: 'string',
+  createdDt: '2023-05-19T22:05:35.117Z',
+  updatedDt: '2023-05-19T22:05:35.117Z',
+  deletedDt: null,
+  version: 1,
+};
+
 const createQueryBuilder: any = {
   delete: jest.fn().mockImplementation(() => {
     return createQueryBuilder;
@@ -69,19 +81,19 @@ const createQueryBuilder: any = {
   getOne: jest
     .fn()
     .mockImplementationOnce(() => {
-      return oneChecklist;
+      return oneChecklistItem;
     })
     .mockImplementationOnce(() => {
       return null;
     })
     .mockImplementationOnce(() => {
-      return oneChecklist;
+      return oneChecklistItem;
     })
     .mockImplementationOnce(() => {
       return null;
     })
     .mockImplementationOnce(() => {
-      return oneChecklist;
+      return oneChecklistItem;
     })
     .mockImplementationOnce(() => {
       return null;
@@ -96,20 +108,20 @@ const createQueryBuilder: any = {
     }),
 };
 
-describe('ChecklistsService', () => {
-  let service: ChecklistsService;
-  let repo: Repository<Checklist>;
+describe('ChecklistItemsService', () => {
+  let service: ChecklistItemsService;
+  let repo: Repository<ChecklistItem>;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        ChecklistsService,
+        ChecklistItemsService,
         {
-          provide: getRepositoryToken(Checklist),
+          provide: getRepositoryToken(ChecklistItem),
           useValue: {
-            findOne: jest.fn().mockResolvedValue(oneChecklist),
-            findOneOrFail: jest.fn().mockResolvedValue(oneChecklist),
-            save: jest.fn().mockResolvedValue(oneChecklist),
+            findOne: jest.fn().mockResolvedValue(oneChecklistItem),
+            findOneOrFail: jest.fn().mockResolvedValue(oneChecklistItem),
+            save: jest.fn().mockResolvedValue(oneChecklistItem),
             merge: jest.fn(),
             createQueryBuilder: jest.fn(() => createQueryBuilder),
             // as these do not actually use their return values in our sample
@@ -120,11 +132,17 @@ describe('ChecklistsService', () => {
             delete: jest.fn().mockResolvedValue(true),
           },
         },
+        {
+          provide: ChecklistsService,
+          useValue: {
+            findOne: jest.fn().mockResolvedValue(oneChecklist),
+          },
+        },
       ],
     }).compile();
 
-    service = module.get<ChecklistsService>(ChecklistsService);
-    repo = module.get<Repository<Checklist>>(getRepositoryToken(Checklist));
+    service = module.get<ChecklistItemsService>(ChecklistItemsService);
+    repo = module.get<Repository<ChecklistItem>>(getRepositoryToken(ChecklistItem));
   });
 
   it('should be defined', () => {
@@ -133,10 +151,10 @@ describe('ChecklistsService', () => {
 
   describe('create', () => {
     it('should be create a user', async () => {
-      const payload = new CreateChecklistDto();
+      const payload = new CreateChecklistItemDto();
       payload.name = 'item name';
 
-      await service.create(payload);
+      await service.create('uuid', payload);
 
       expect(repo.save).toBeCalledTimes(1);
     });
@@ -144,7 +162,7 @@ describe('ChecklistsService', () => {
 
   describe('findAll', () => {
     it('should be return list', async () => {
-      const result = await service.findAll({
+      const result = await service.findAll('uuid', {
         limit: 10,
         page: 1,
         search: null,
@@ -155,7 +173,7 @@ describe('ChecklistsService', () => {
     });
 
     it('should be return list when filter active', async () => {
-      const result = await service.findAll({
+      const result = await service.findAll('uuid', {
         limit: 10,
         page: 1,
         search: 'something',
@@ -168,51 +186,51 @@ describe('ChecklistsService', () => {
 
   describe('findOne', () => {
     it('should be return a checklist item', async () => {
-      const result = await service.findOne('uuid');
+      const result = await service.findOne('checklist uuid', 'uuid');
       expect(result).toHaveProperty('id');
     });
 
     it('should be return exception when id not found', async () => {
       try {
-        await service.findOne('another uuid');
+        await service.findOne('uuid', 'another uuid');
       } catch (error) {
-        expect(error.message).toBe('Checklist with id another uuid not found.');
+        expect(error.message).toBe('Checklist Item with id another uuid not found.');
       }
     });
   });
 
   describe('update', () => {
     it('should be update a user', async () => {
-      const payload = new UpdateChecklistDto();
+      const payload = new UpdateChecklistItemDto();
       payload.name = 'another name';
 
-      await service.update('uuid', payload);
+      await service.update('checklist uuid', 'uuid', payload);
 
       expect(repo.save).toBeCalledTimes(1);
     });
 
-    it('should be return exception when Checklist not found', async () => {
-      const payload = new UpdateChecklistDto();
-      payload.name = 'Checklist name';
+    it('should be return exception when Checklist Item not found', async () => {
+      const payload = new UpdateChecklistItemDto();
+      payload.name = 'Checklist Item name';
 
       try {
-        await service.update('another uuid', payload);
+        await service.update('checklist uuid', 'another uuid', payload);
       } catch (error) {
-        expect(error.message).toBe('Checklist with id another uuid not found.');
+        expect(error.message).toBe('Checklist Item with id another uuid not found.');
       }
     });
   });
 
   describe('remove', () => {
     it('should be update a checklist', async () => {
-      expect(await service.remove('uuid')).toBeTruthy();
+      expect(await service.remove('checklist uuid', 'uuid')).toBeTruthy();
     });
 
-    it('should be return exception when Checklist not found', async () => {
+    it('should be return exception when Checklist Item not found', async () => {
       try {
-        await service.remove('another uuid');
+        await service.remove('checklist uuid', 'another uuid');
       } catch (error) {
-        expect(error.message).toBe('Checklist with id another uuid not found.');
+        expect(error.message).toBe('Checklist Item with id another uuid not found.');
       }
     });
   });

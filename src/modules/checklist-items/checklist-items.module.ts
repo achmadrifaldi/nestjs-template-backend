@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { ChecklistItemsService } from './checklist-items.service';
-import { ChecklistItemsController } from './checklist-items.controller';
+import { ChecklistItemsService } from './providers/checklist-items.service';
+import { ChecklistItemsController } from './controllers/checklist-items.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ChecklistItem } from './entities/checklist-item.entity';
 import { ChecklistsModule } from '../checklists/checklists.module';

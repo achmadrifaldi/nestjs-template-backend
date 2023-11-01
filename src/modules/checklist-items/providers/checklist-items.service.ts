@@ -4,13 +4,13 @@ import { Repository, UpdateResult } from 'typeorm';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
-import { QuerySortingHelper } from '../../common/helpers/query-sorting.helper';
-import { IExtendPaginationOptions } from '../../common/interfaces/extend-pagination-options.interface';
-import { ChecklistsService } from '../checklists/checklists.service';
-import { SORTING_COLUMNS } from './constants/sorting-columns.constant';
-import { CreateChecklistItemDto } from './dto/create-checklist-item.dto';
-import { UpdateChecklistItemDto } from './dto/update-checklist-item.dto';
-import { ChecklistItem } from './entities/checklist-item.entity';
+import { QuerySortingHelper } from '../../../common/helpers/query-sorting.helper';
+import { IExtendPaginationOptions } from '../../../common/interfaces/extend-pagination-options.interface';
+import { ChecklistsService } from '../../checklists/providers/checklists.service';
+import { SORTING_COLUMNS } from '../constants/sorting-columns.constant';
+import { CreateChecklistItemDto } from '../dto/create-checklist-item.dto';
+import { UpdateChecklistItemDto } from '../dto/update-checklist-item.dto';
+import { ChecklistItem } from '../entities/checklist-item.entity';
 
 @Injectable()
 export class ChecklistItemsService {
