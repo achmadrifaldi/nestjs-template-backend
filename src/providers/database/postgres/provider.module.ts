@@ -4,6 +4,7 @@ import { DatabasePostgresConfigModule } from '../../../config/database/postgres/
 import { DatabasePostgresConfigService } from '../../../config/database/postgres/config.services';
 import { DatabaseType } from 'typeorm';
 import { Module } from '@nestjs/common';
+import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { Module } from '@nestjs/common';
         subscribers: [],
         synchronize: pgConfigService.dbSync === 'true',
         logging: pgConfigService.dbLogging === 'true',
+        namingStrategy: new SnakeNamingStrategy(),
       }),
       inject: [DatabasePostgresConfigService],
     } as TypeOrmModuleAsyncOptions),
