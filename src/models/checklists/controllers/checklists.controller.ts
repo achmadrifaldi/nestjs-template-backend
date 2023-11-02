@@ -82,11 +82,21 @@ export class ChecklistsController {
 
   @Delete(':id')
   @ApiOperation({
-    summary: 'Delete checklist by ID',
+    summary: 'Soft Delete checklist by ID',
   })
   @ApiBaseResponse(UpdateResult)
   remove(@Req() req, @Param() param: ParamIdDto) {
     const { id } = param;
     return this.checklistsService.remove({ id, req });
+  }
+
+  @Delete(':id/delete')
+  @ApiOperation({
+    summary: 'Hard Delete checklist by ID',
+  })
+  @ApiBaseResponse(UpdateResult)
+  delete(@Req() req, @Param() param: ParamIdDto) {
+    const { id } = param;
+    return this.checklistsService.delete({ id, req });
   }
 }

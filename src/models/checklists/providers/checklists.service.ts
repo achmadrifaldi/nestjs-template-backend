@@ -44,9 +44,6 @@ export class ChecklistsService {
   async findOne(id: string): Promise<Checklist> {
     const checklist = await this.checklistRepository.findOne({
       where: { id },
-      relations: {
-        checklistItems: true,
-      },
     });
 
     if (!checklist) {
@@ -76,5 +73,10 @@ export class ChecklistsService {
   async remove({ id, req }: { id: string; req: any }): Promise<Checklist> {
     const checklist: Checklist = await this.findOne(id);
     return await this.checklistRepository.softRemove(checklist, { data: { user: req.user } });
+  }
+
+  async delete({ id, req }: { id: string; req: any }): Promise<Checklist> {
+    const checklist: Checklist = await this.findOne(id);
+    return await this.checklistRepository.remove(checklist, { data: { user: req.user } });
   }
 }
