@@ -2,7 +2,19 @@ import { Pagination } from 'nestjs-typeorm-paginate';
 import { JwtAuthGuard } from '../../../common/guards/jwt-auth.guard';
 import { HttpSuccessInterceptor } from '../../../common/interceptors/http-success.interceptor';
 
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards, UseInterceptors } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+  Req,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 import { ApiBaseResponse } from '../../../common/decorators/api-base-response.decorator';
@@ -28,8 +40,8 @@ export class ChecklistsController {
     summary: 'Create checklist',
   })
   @ApiBaseResponse(Checklist)
-  create(@Body() createChecklistDto: CreateChecklistDto) {
-    return this.checklistsService.create(createChecklistDto);
+  create(@Req() req, @Body() createChecklistDto: CreateChecklistDto) {
+    return this.checklistsService.create({ createChecklistDto, req });
   }
 
   @Get()
@@ -63,9 +75,9 @@ export class ChecklistsController {
     summary: 'Update checklist by ID',
   })
   @ApiBaseResponse(Checklist)
-  update(@Param() param: ParamIdDto, @Body() updateChecklistDto: UpdateChecklistDto) {
+  update(@Req() req, @Param() param: ParamIdDto, @Body() updateChecklistDto: UpdateChecklistDto) {
     const { id } = param;
-    return this.checklistsService.update(id, updateChecklistDto);
+    return this.checklistsService.update({ id, updateChecklistDto, req });
   }
 
   @Delete(':id')
@@ -73,8 +85,8 @@ export class ChecklistsController {
     summary: 'Delete checklist by ID',
   })
   @ApiBaseResponse(UpdateResult)
-  remove(@Param() param: ParamIdDto) {
+  remove(@Req() req, @Param() param: ParamIdDto) {
     const { id } = param;
-    return this.checklistsService.remove(id);
+    return this.checklistsService.remove({ id, req });
   }
 }

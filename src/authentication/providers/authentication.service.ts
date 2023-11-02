@@ -3,9 +3,9 @@ import * as bcrypt from 'bcrypt';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 
-import { CreateUserDto } from '../../modules/users/dto/create-user.dto';
-import { User } from '../../modules/users/entities/user.entity';
-import { UsersService } from '../../modules/users/providers/users.service';
+import { CreateUserDto } from '../../models/users/dto/create-user.dto';
+import { User } from '../../models/users/entities/user.entity';
+import { UsersService } from '../../models/users/providers/users.service';
 import { SALT_OR_ROUND } from '../constants/brcrypt.constant';
 import { RegisterEmailDto } from '../dto/register-email.dto';
 import { ILogin } from '../interfaces/login.interface';

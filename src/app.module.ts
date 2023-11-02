@@ -1,22 +1,35 @@
 import { Module } from '@nestjs/common';
 
-import { AuthenticationModule } from './authentication/authentication.module';
+// Config
 import { AppConfigModule } from './config/app/config.module';
 import { DatabasePostgresConfigModule } from './config/database/postgres/config.module';
-import { ChecklistItemsModule } from './modules/checklist-items/checklist-items.module';
-import { ChecklistsModule } from './modules/checklists/checklists.module';
-import { UsersModule } from './modules/users/users.module';
+
+// Providers
 import { PostgresDatabaseProviderModule } from './providers/database/postgres/provider.module';
+
+// Authentication
+import { AuthenticationModule } from './authentication/authentication.module';
+
+// Models
+import { AuditLogsModule } from './models/audit-logs/audit-logs.module';
+import { ChecklistsModule } from './models/checklists/checklists.module';
+import { ChecklistItemsModule } from './models/checklist-items/checklist-items.module';
+import { UsersModule } from './models/users/users.module';
 
 @Module({
   imports: [
+    // Config
     AppConfigModule,
     DatabasePostgresConfigModule,
+    // Providers
     PostgresDatabaseProviderModule,
+    // Authentication
     AuthenticationModule,
-    UsersModule,
+    // Models
+    AuditLogsModule,
     ChecklistsModule,
     ChecklistItemsModule,
+    UsersModule,
   ],
 })
 export class AppModule {}

@@ -2,7 +2,7 @@ import { Column, Entity } from 'typeorm';
 
 import { ApiProperty } from '@nestjs/swagger';
 import { Exclude } from 'class-transformer';
-import { AppBase } from 'src/common/entities/app-base.entity';
+import { AppBase } from 'src/common/entities/app-base';
 
 @Entity()
 export class User extends AppBase {

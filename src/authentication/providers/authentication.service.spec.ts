@@ -5,7 +5,7 @@ import { PassportModule } from '@nestjs/passport';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { JwtConfigModule } from '../../config/jwt/config.module';
-import { UsersService } from '../../modules/users/providers/users.service';
+import { UsersService } from '../../models/users/providers/users.service';
 import { AuthenticationService } from './authentication.service';
 import { RegisterEmailDto } from '../dto/register-email.dto';
 

@@ -18,11 +18,11 @@ export class ChecklistsService {
     private readonly checklistRepository: Repository<Checklist>
   ) {}
 
-  async create(createChecklistDto: CreateChecklistDto): Promise<Checklist> {
+  async create({ createChecklistDto, req }: { createChecklistDto: CreateChecklistDto; req: any }): Promise<Checklist> {
     const model = new Checklist();
     this.checklistRepository.merge(model, createChecklistDto);
 
-    return await this.checklistRepository.save(model);
+    return await this.checklistRepository.save(model, { data: { user: req.user } });
   }
 
   async findAll(options: IExtendPaginationOptions): Promise<Pagination<Checklist>> {
@@ -44,6 +44,9 @@ export class ChecklistsService {
   async findOne(id: string): Promise<Checklist> {
     const checklist = await this.checklistRepository.findOne({
       where: { id },
+      relations: {
+        checklistItems: true,
+      },
     });
 
     if (!checklist) {
@@ -53,23 +56,25 @@ export class ChecklistsService {
     return checklist;
   }
 
-  async update(id: string, updateChecklistDto: UpdateChecklistDto): Promise<Checklist> {
+  async update({
+    id,
+    updateChecklistDto,
+    req,
+  }: {
+    id: string;
+    updateChecklistDto: UpdateChecklistDto;
+    req: any;
+  }): Promise<Checklist> {
     const checklist: Checklist = await this.findOne(id);
 
     const model = new Checklist();
     this.checklistRepository.merge(model, { ...checklist }, updateChecklistDto);
 
-    return await this.checklistRepository.save(model);
+    return await this.checklistRepository.save(model, { data: { user: req.user } });
   }
 
-  async remove(id: string): Promise<UpdateResult> {
+  async remove({ id, req }: { id: string; req: any }): Promise<Checklist> {
     const checklist: Checklist = await this.findOne(id);
-
-    return await this.checklistRepository
-      .createQueryBuilder('checklists')
-      .softDelete()
-      .where('id = :id', { id: checklist.id })
-      .returning('*')
-      .execute();
+    return await this.checklistRepository.softRemove(checklist, { data: { user: req.user } });
   }
 }

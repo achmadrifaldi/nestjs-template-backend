@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Checklist } from '../../checklists/entities/checklist.entity';
 import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
-import { AppBase } from 'src/common/entities/app-base.entity';
+import { AppBase } from 'src/common/entities/app-base';
 
 @Entity()
 export class ChecklistItem extends AppBase {

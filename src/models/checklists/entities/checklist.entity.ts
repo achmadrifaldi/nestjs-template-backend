@@ -3,7 +3,7 @@ import { Column, Entity, OneToMany } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 
 import { ChecklistItem } from '../../checklist-items/entities/checklist-item.entity';
-import { AppBase } from 'src/common/entities/app-base.entity';
+import { AppBase } from 'src/common/entities/app-base';
 
 @Entity()
 export class Checklist extends AppBase {
