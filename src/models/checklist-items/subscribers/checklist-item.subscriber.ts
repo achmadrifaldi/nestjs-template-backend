@@ -3,6 +3,7 @@ import {
   EntitySubscriberInterface,
   EventSubscriber,
   InsertEvent,
+  RemoveEvent,
   SoftRemoveEvent,
   UpdateEvent,
 } from 'typeorm';
@@ -57,6 +58,10 @@ export class ChecklistItemSubscriber implements EntitySubscriberInterface<Checkl
     entity.deletedBy = user ? user.name : 'SYSTEM';
   }
 
+  async beforeRemove(event: RemoveEvent<ChecklistItem>) {
+    await this.setAudit(event, 0);
+  }
+
   async afterInsert(event: InsertEvent<ChecklistItem>) {
     await this.setAudit(event);
   }
@@ -69,7 +74,14 @@ export class ChecklistItemSubscriber implements EntitySubscriberInterface<Checkl
     await this.setAudit(event);
   }
 
-  async setAudit(event): Promise<void> {
+  async setAudit(
+    event:
+      | InsertEvent<ChecklistItem>
+      | UpdateEvent<ChecklistItem>
+      | SoftRemoveEvent<ChecklistItem>
+      | RemoveEvent<ChecklistItem>,
+    revType = 1
+  ): Promise<void> {
     const {
       entity,
       queryRunner: {
@@ -86,12 +98,13 @@ export class ChecklistItemSubscriber implements EntitySubscriberInterface<Checkl
       // Create audit log entity
       const auditLog = new AuditLog();
       auditLog.userId = user.id;
-      await auditRepository.save(auditLog);
+      auditLog.revType = revType;
+      await auditRepository.save(auditLog, { listeners: false });
 
       // Create audit on entity
       const entityAud = new ChecklistItemAud();
       entityRepository.merge(entityAud, entity, { audit: auditLog });
-      entityRepository.save(entityAud);
+      await entityRepository.save(entityAud, { listeners: false });
     }
   }
 }

@@ -3,6 +3,7 @@ import {
   EntitySubscriberInterface,
   EventSubscriber,
   InsertEvent,
+  RemoveEvent,
   SoftRemoveEvent,
   UpdateEvent,
 } from 'typeorm';
@@ -57,6 +58,10 @@ export class UserSubscriber implements EntitySubscriberInterface<User> {
     entity.deletedBy = user ? user.name : 'SYSTEM';
   }
 
+  async beforeRemove(event: RemoveEvent<User>) {
+    await this.setAudit(event, 0);
+  }
+
   async afterInsert(event: InsertEvent<User>) {
     await this.setAudit(event);
   }
@@ -69,7 +74,10 @@ export class UserSubscriber implements EntitySubscriberInterface<User> {
     await this.setAudit(event);
   }
 
-  async setAudit(event): Promise<void> {
+  async setAudit(
+    event: InsertEvent<User> | UpdateEvent<User> | SoftRemoveEvent<User> | RemoveEvent<User>,
+    revType = 1
+  ): Promise<void> {
     const {
       entity,
       queryRunner: {
@@ -86,12 +94,13 @@ export class UserSubscriber implements EntitySubscriberInterface<User> {
       // Create audit log entity
       const auditLog = new AuditLog();
       auditLog.userId = user.id;
-      await auditRepository.save(auditLog);
+      auditLog.revType = revType;
+      await auditRepository.save(auditLog, { listeners: false });
 
       // Create audit on entity
       const entityAud = new UserAud();
       entityRepository.merge(entityAud, entity, { audit: auditLog });
-      entityRepository.save(entityAud);
+      await entityRepository.save(entityAud, { listeners: false });
     }
   }
 }
