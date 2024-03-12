@@ -19,11 +19,11 @@
     "start": "nest start",
     "start:debug": "nest start --debug --watch",
     "start:dev": "nest start --watch",
-    "start:prod": "node dist/main",
+    "start:prod": "node dist/apps/web-app/main",
     "test": "jest",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "test:e2e": "jest --config ./apps/web-app/test/jest-e2e.json",
     "test:watch": "jest --watch",
     "seed:run": "ts-node ./node_modules/typeorm-extension/bin/cli.cjs seed:run -d ./src/database/data-source.ts"
   },
@@ -31,17 +31,28 @@
     "collectCoverageFrom": [
       "**/*.(t|j)s"
     ],
-    "coverageDirectory": "../coverage",
+    "coverageDirectory": "./coverage",
     "moduleFileExtensions": [
       "js",
       "json",
       "ts"
     ],
-    "rootDir": "src",
+    "rootDir": ".",
     "testEnvironment": "node",
     "testRegex": ".*\\.spec\\.ts$",
     "transform": {
       "^.+\\.(t|j)s$": "ts-jest"
+    },
+    "roots": [
+      "<rootDir>/apps/",
+      "<rootDir>/libs/"
+    ],
+    "moduleNameMapper": {
+      "^@app/authentication(|/.*)$": "<rootDir>/libs/authentication/src/$1",
+      "^@app/database(|/.*)$": "<rootDir>/libs/database/src/$1",
+      "^@app/common(|/.*)$": "<rootDir>/libs/common/src/$1",
+      "^@app/features(|/.*)$": "<rootDir>/libs/features/src/$1",
+      "^@app/config(|/.*)$": "<rootDir>/libs/config/src/$1"
     }
   },
   "dependencies": {
