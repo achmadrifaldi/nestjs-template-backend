@@ -29,7 +29,7 @@ async function bootstrap() {
   /**
    * Global Validation
    */
-  app.useGlobalPipes(new ValidationPipe({ transform: true }));
+  app.useGlobalPipes(new ValidationPipe({ transform: true, whitelist: true }));
 
   /**
    * Enable Cors
