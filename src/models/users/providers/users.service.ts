@@ -10,19 +10,25 @@ import { SORTING_COLUMNS } from '../constants/sorting-columns.constant';
 import { CreateUserDto } from '../dto/create-user.dto';
 import { UpdateUserDto } from '../dto/update-user.dto';
 import { User } from '../entities/user.entity';
+import { MailService } from '../../../mail/mail.service';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User)
-    private readonly userRepository: Repository<User>
+    private readonly userRepository: Repository<User>,
+    private mailService: MailService
   ) {}
 
   async create(createUserDto: CreateUserDto): Promise<User> {
     const model = new User();
     this.userRepository.merge(model, createUserDto);
+    const user = await this.userRepository.save(model);
 
-    return await this.userRepository.save(model);
+    // Send Email
+    await this.mailService.sendEmailDelay({ to: user.email, subject: 'Welcome!', payload: { name: user.name } })
+    
+    return user
   }
 
   findAll(options: IExtendPaginationOptions): Promise<Pagination<User>> {

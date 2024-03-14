@@ -14,7 +14,7 @@ async function bootstrap() {
   /**
    * Global Prefix
    */
-  app.setGlobalPrefix('api');
+  app.setGlobalPrefix('/api');
 
   /**
    * Set Swagger

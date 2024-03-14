@@ -1,0 +1,21 @@
+import { Module } from '@nestjs/common';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+
+import { MailConfigService } from './config.services';
+import configuration from './configuration';
+
+/**
+ * Import and provide app configuration related classes.
+ *
+ * @module
+ */
+@Module({
+  imports: [
+    ConfigModule.forRoot({
+      load: [configuration],
+    }),
+  ],
+  providers: [ConfigService, MailConfigService],
+  exports: [ConfigService, MailConfigService],
+})
+export class MailConfigModule {}
