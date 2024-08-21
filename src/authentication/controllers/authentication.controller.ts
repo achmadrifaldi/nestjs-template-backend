@@ -14,7 +14,10 @@ import { RegisterEmailDto } from '../dto/register-email.dto';
 @Controller('authentication')
 @ApiTags('Authentication')
 export class AuthenticationController {
-  constructor(private authenticationService: AuthenticationService, private usersService: UsersService) {}
+  constructor(
+    private authenticationService: AuthenticationService,
+    private usersService: UsersService
+  ) {}
 
   @Post('login')
   @HttpCode(200)

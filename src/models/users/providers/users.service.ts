@@ -26,9 +26,9 @@ export class UsersService {
     const user = await this.userRepository.save(model);
 
     // Send Email
-    await this.mailService.sendEmailDelay({ to: user.email, subject: 'Welcome!', payload: { name: user.name } })
-    
-    return user
+    await this.mailService.sendEmailDelay({ to: user.email, subject: 'Welcome!', payload: { name: user.name } });
+
+    return user;
   }
 
   findAll(options: IExtendPaginationOptions): Promise<Pagination<User>> {

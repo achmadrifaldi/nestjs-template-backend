@@ -17,6 +17,6 @@ import { MailConsumer } from '../job/mail.consumer';
     }),
   ],
   providers: [MailService, MailConsumer],
-  exports: [MailService]
+  exports: [MailService],
 })
 export class MailModule {}
