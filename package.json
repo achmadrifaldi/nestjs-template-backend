@@ -6,7 +6,7 @@
   "license": "UNLICENSED",
   "author": "",
   "scripts": {
-    "build": "nest build",
+    "build": "nest build && cp -R src/mail/templates dist/mail/templates",
     "precommit": "lint-staged && npm run lint",
     "commit": "cz",
     "eslint:check": "eslint \"{src,apps,libs,test}/**/*.ts\"",
