@@ -1,11 +1,12 @@
 import { BullModule } from '@nestjs/bull';
 import { BullBoardModule } from '@bull-board/nestjs';
 import { ExpressAdapter } from '@bull-board/express';
-import { Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import { RedisConfigModule } from '../../config/redis/config.module';
 import { RedisConfigService } from '../../config/redis/config.services';
 import { BasicAuthMiddleware } from './basic-auth.middleware';
 
+@Global()
 @Module({
   imports: [
     BullModule.forRootAsync({
@@ -14,6 +15,7 @@ import { BasicAuthMiddleware } from './basic-auth.middleware';
         redis: {
           host: redisConfig.redisHost,
           port: Number(redisConfig.redisPort),
+          password: redisConfig.redisPassword,
         },
       }),
       inject: [RedisConfigService],
@@ -24,5 +26,6 @@ import { BasicAuthMiddleware } from './basic-auth.middleware';
       adapter: ExpressAdapter, // Or FastifyAdapter from `@bull-board/fastify`
     }),
   ],
+  exports: [BullModule]
 })
 export class BullProviderModule {}
