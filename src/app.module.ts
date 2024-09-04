@@ -13,7 +13,6 @@ import { MailProviderModule } from './providers/mail/provider.module';
 import { AuthenticationModule } from './authentication/authentication.module';
 
 // Models
-import { AuditLogsModule } from './models/audit-logs/audit-logs.module';
 import { ChecklistsModule } from './models/checklists/checklists.module';
 import { ChecklistItemsModule } from './models/checklist-items/checklist-items.module';
 import { UsersModule } from './models/users/users.module';
@@ -31,7 +30,6 @@ import { MailModule } from './mail/mail.module';
     // Authentication
     AuthenticationModule,
     // Models
-    AuditLogsModule,
     ChecklistsModule,
     ChecklistItemsModule,
     UsersModule,
