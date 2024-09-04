@@ -23,7 +23,7 @@ import { MailConfigService } from 'src/config/mail/config.services';
           from: mailConfigService.mailFrom,
         },
         template: {
-          dir: process.cwd() + '/src/mail/templates',
+          dir: process.cwd() + '/mail/templates',
           adapter: new HandlebarsAdapter(), // or new PugAdapter() or new EjsAdapter()
           options: {
             strict: true,
@@ -33,5 +33,6 @@ import { MailConfigService } from 'src/config/mail/config.services';
       inject: [MailConfigService],
     }),
   ],
+  exports: [MailerModule]
 })
 export class MailProviderModule {}
