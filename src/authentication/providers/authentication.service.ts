@@ -54,6 +54,6 @@ export class AuthenticationService {
     createUserDto.password = passHash;
     createUserDto.name = name;
 
-    return await this.usersService.create(createUserDto);
+    return await this.usersService.saveUser(createUserDto);
   }
 }

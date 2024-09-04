@@ -7,6 +7,7 @@ import {
   Controller,
   Delete,
   Get,
+  NotFoundException,
   Param,
   Patch,
   Post,
@@ -26,6 +27,7 @@ import { CreateChecklistDto } from '../dto/create-checklist.dto';
 import { UpdateChecklistDto } from '../dto/update-checklist.dto';
 import { Checklist } from '../entities/checklist.entity';
 import { UpdateResult } from 'typeorm';
+import { SORTING_COLUMNS } from '../constants/sorting-columns.constant';
 
 @Controller('checklists')
 @UseInterceptors(HttpSuccessInterceptor)
@@ -40,8 +42,9 @@ export class ChecklistsController {
     summary: 'Create checklist',
   })
   @ApiBaseResponse(Checklist)
-  create(@Req() req, @Body() createChecklistDto: CreateChecklistDto) {
-    return this.checklistsService.create({ createChecklistDto, req });
+  create(@Req() req, @Body() body: CreateChecklistDto) {
+    const { user } = req;
+    return this.checklistsService.save({ body, user });
   }
 
   @Get()
@@ -49,15 +52,28 @@ export class ChecklistsController {
     summary: 'Get list of checklist',
   })
   @ApiPaginatedResponse(Checklist)
-  findAll(@Query() query: PaginationQueryDto): Promise<Pagination<Checklist>> {
+  findAll(@Req() req, @Query() query: PaginationQueryDto): Promise<Pagination<Checklist>> {
+    const { user } = req;
+    console.log(user);
     const { page, limit, sortBy, search } = query;
 
-    return this.checklistsService.findAll({
+    const filters = [];
+    if (search) {
+      filters.push({
+        column: 'entity.name',
+        condition: 'ILIKE',
+        parameterName: 'name',
+        parameterValue: `%${search}%`
+      })
+    }
+
+    return this.checklistsService.findWithPagination({
+      sortBy, 
+      sortPermitColumns: SORTING_COLUMNS,
+      filters,
       limit,
-      page,
-      search,
-      sortBy: Array.isArray(sortBy) ? sortBy : [sortBy],
-    });
+      page
+    })
   }
 
   @Get(':id')
@@ -65,9 +81,15 @@ export class ChecklistsController {
     summary: 'Get one checklist by ID',
   })
   @ApiBaseResponse(Checklist)
-  findOne(@Param() param: ParamIdDto) {
+  async findOne(@Param() param: ParamIdDto) {
     const { id } = param;
-    return this.checklistsService.findOne(id);
+    const checklist = await this.checklistsService.findOneById(id);
+
+    if (!checklist) {
+      throw new NotFoundException(`Checklist with id ${id} not found.`);
+    }
+
+    return checklist;
   }
 
   @Patch(':id')
@@ -75,9 +97,10 @@ export class ChecklistsController {
     summary: 'Update checklist by ID',
   })
   @ApiBaseResponse(Checklist)
-  update(@Req() req, @Param() param: ParamIdDto, @Body() updateChecklistDto: UpdateChecklistDto) {
+  update(@Req() req, @Param() param: ParamIdDto, @Body() body: UpdateChecklistDto) {
     const { id } = param;
-    return this.checklistsService.update({ id, updateChecklistDto, req });
+    const { user } = req;
+    return this.checklistsService.update({ id, body, user });
   }
 
   @Delete(':id')
@@ -87,7 +110,8 @@ export class ChecklistsController {
   @ApiBaseResponse(UpdateResult)
   remove(@Req() req, @Param() param: ParamIdDto) {
     const { id } = param;
-    return this.checklistsService.remove({ id, req });
+    const { user } = req;
+    return this.checklistsService.delete({ id, user });
   }
 
   @Delete(':id/delete')
@@ -97,6 +121,7 @@ export class ChecklistsController {
   @ApiBaseResponse(UpdateResult)
   delete(@Req() req, @Param() param: ParamIdDto) {
     const { id } = param;
-    return this.checklistsService.delete({ id, req });
+    const { user } = req;
+    return this.checklistsService.remove({ id, user });
   }
 }
