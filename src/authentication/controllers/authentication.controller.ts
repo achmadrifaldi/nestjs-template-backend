@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Post, Req, UseGuards, UseInterceptors } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 import { ApiBaseResponse } from '../../common/decorators/api-base-response.decorator';
@@ -10,6 +10,8 @@ import { AuthenticationService } from '../providers/authentication.service';
 import { LoginEmailDto } from '../dto/login-email.dto';
 import { LoginDto } from '../dto/login.dto';
 import { RegisterEmailDto } from '../dto/register-email.dto';
+import { MapInterceptor } from '@automapper/nestjs';
+import { UserDto } from '../../models/users/dto/user.dto';
 
 @Controller('authentication')
 @ApiTags('Authentication')
@@ -42,7 +44,8 @@ export class AuthenticationController {
   @UseGuards(JwtAuthGuard)
   @Get('profile')
   @ApiBearerAuth()
+  @UseInterceptors(MapInterceptor(User, UserDto))
   getProfile(@Req() req) {
-    return this.usersService.findOne(req.user.id);
+    return this.usersService.findOneById(req.user.id);
   }
 }
