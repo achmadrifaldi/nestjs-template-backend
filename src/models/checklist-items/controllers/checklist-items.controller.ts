@@ -17,6 +17,9 @@ import { ParamChecklistIdDto } from '../dto/param-checklist-id.dto';
 import { UpdateChecklistItemDto } from '../dto/update-checklist-item.dto';
 import { ChecklistItem } from '../entities/checklist-item.entity';
 import { SORTING_COLUMNS } from '../constants/sorting-columns.constant';
+import { MapInterceptor } from '@automapper/nestjs';
+import { ChecklistItemDto } from '../dto/checklist-item.dto';
+import { ChecklistItemProfile } from '../providers/checklist-item.profile';
 
 @Controller('checklists')
 @UseInterceptors(HttpSuccessInterceptor)
@@ -26,14 +29,16 @@ import { SORTING_COLUMNS } from '../constants/sorting-columns.constant';
 export class ChecklistItemsController {
   constructor(
     private readonly checklistService: ChecklistsService,
-    private readonly checklistItemsService: ChecklistItemsService
+    private readonly checklistItemsService: ChecklistItemsService,
+    private readonly checklistItemProfile: ChecklistItemProfile
   ) {}
 
   @Post(':checklistId/checklist-items')
   @ApiOperation({
     summary: 'Create checklist item',
   })
-  @ApiBaseResponse(ChecklistItem)
+  @ApiBaseResponse(ChecklistItemDto)
+  @UseInterceptors(MapInterceptor(ChecklistItem, ChecklistItemDto))
   async create(@Param() paramChecklist: ParamChecklistIdDto, @Req() req, @Body() body: CreateChecklistItemDto) {
     const { checklistId } = paramChecklist;
     const checklist = await this.validateChecklist(checklistId);
@@ -43,6 +48,7 @@ export class ChecklistItemsController {
       ...body,
       checklist
     }
+
     return this.checklistItemsService.save({ body: payload, user });
   }
 
@@ -50,11 +56,11 @@ export class ChecklistItemsController {
   @ApiOperation({
     summary: 'Get list checklist item',
   })
-  @ApiPaginatedResponse(ChecklistItem)
+  @ApiPaginatedResponse(ChecklistItemDto)
   async findAll(
     @Param() paramChecklist: ParamChecklistIdDto,
     @Query() query: PaginationQueryDto
-  ): Promise<Pagination<ChecklistItem>> {
+  ): Promise<Pagination<ChecklistItemDto>> {
     const { checklistId } = paramChecklist;
     await this.validateChecklist(checklistId);
 
@@ -76,20 +82,24 @@ export class ChecklistItemsController {
       })
     }
 
-    return this.checklistItemsService.findWithPagination({
+    const data = await this.checklistItemsService.findWithPagination({
       sortBy, 
       sortPermitColumns: SORTING_COLUMNS,
+      relations: ['entity.checklist'],
       filters,
       limit,
       page
     })
+
+    return this.checklistItemProfile.fromPaginate(data)
   }
 
   @Get(':checklistId/checklist-items/:id')
   @ApiOperation({
     summary: 'Get one checklist item by ID',
   })
-  @ApiBaseResponse(ChecklistItem)
+  @ApiBaseResponse(ChecklistItemDto)
+  @UseInterceptors(MapInterceptor(ChecklistItem, ChecklistItemDto))
   async findOne(@Param() paramChecklist: ParamChecklistIdDto, @Param() param: ParamIdDto) {
     const { checklistId } = paramChecklist;
     const { id } = param;
@@ -101,7 +111,7 @@ export class ChecklistItemsController {
   @ApiOperation({
     summary: 'Update checklist item by ID',
   })
-  @ApiBaseResponse(ChecklistItem)
+  @ApiBaseResponse(UpdateResult)
   async update(
     @Param() paramChecklist: ParamChecklistIdDto,
     @Param() param: ParamIdDto,

@@ -80,8 +80,6 @@ export class AppService<T> {
         }
       : {};
 
-      console.log(createdData)
-
     const savedData = await this.repository.save({
       ...createdData,
       ...auditColumn,

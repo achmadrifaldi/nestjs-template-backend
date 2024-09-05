@@ -4,11 +4,12 @@ import { ChecklistItemsController } from './controllers/checklist-items.controll
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ChecklistItem } from './entities/checklist-item.entity';
 import { ChecklistsModule } from '../checklists/checklists.module';
+import { ChecklistItemProfile } from './providers/checklist-item.profile';
 
 @Module({
   imports: [TypeOrmModule.forFeature([ChecklistItem]), ChecklistsModule],
   controllers: [ChecklistItemsController],
-  providers: [ChecklistItemsService],
+  providers: [ChecklistItemsService, ChecklistItemProfile],
   exports: [ChecklistItemsService],
 })
 export class ChecklistItemsModule {}

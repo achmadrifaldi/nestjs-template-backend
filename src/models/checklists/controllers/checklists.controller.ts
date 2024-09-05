@@ -28,6 +28,9 @@ import { UpdateChecklistDto } from '../dto/update-checklist.dto';
 import { Checklist } from '../entities/checklist.entity';
 import { UpdateResult } from 'typeorm';
 import { SORTING_COLUMNS } from '../constants/sorting-columns.constant';
+import { MapInterceptor } from '@automapper/nestjs';
+import { ChecklistDto } from '../dto/checklist.dto';
+import { ChecklistProfile } from '../providers/checklist.profile';
 
 @Controller('checklists')
 @UseInterceptors(HttpSuccessInterceptor)
@@ -35,13 +38,17 @@ import { SORTING_COLUMNS } from '../constants/sorting-columns.constant';
 @ApiTags('Checklist')
 @ApiBearerAuth()
 export class ChecklistsController {
-  constructor(private readonly checklistsService: ChecklistsService) {}
+  constructor(
+    private readonly checklistsService: ChecklistsService,
+    private readonly checklistProfile: ChecklistProfile
+  ) {}
 
   @Post()
   @ApiOperation({
     summary: 'Create checklist',
   })
-  @ApiBaseResponse(Checklist)
+  @ApiBaseResponse(ChecklistDto)
+  @UseInterceptors(MapInterceptor(Checklist, ChecklistDto))
   create(@Req() req, @Body() body: CreateChecklistDto) {
     const { user } = req;
     return this.checklistsService.save({ body, user });
@@ -51,10 +58,8 @@ export class ChecklistsController {
   @ApiOperation({
     summary: 'Get list of checklist',
   })
-  @ApiPaginatedResponse(Checklist)
-  findAll(@Req() req, @Query() query: PaginationQueryDto): Promise<Pagination<Checklist>> {
-    const { user } = req;
-    console.log(user);
+  @ApiPaginatedResponse(ChecklistDto)
+  async findAll(@Query() query: PaginationQueryDto): Promise<Pagination<ChecklistDto>> {
     const { page, limit, sortBy, search } = query;
 
     const filters = [];
@@ -67,21 +72,24 @@ export class ChecklistsController {
       })
     }
 
-    return this.checklistsService.findWithPagination({
+    const data = await this.checklistsService.findWithPagination({
       sortBy, 
       sortPermitColumns: SORTING_COLUMNS,
       filters,
       limit,
       page
     })
+
+    return this.checklistProfile.fromPaginate(data)
   }
 
   @Get(':id')
   @ApiOperation({
     summary: 'Get one checklist by ID',
   })
-  @ApiBaseResponse(Checklist)
-  async findOne(@Param() param: ParamIdDto) {
+  @ApiBaseResponse(ChecklistDto)
+  @UseInterceptors(MapInterceptor(Checklist, ChecklistDto))
+  async findOne(@Param() param: ParamIdDto): Promise<ChecklistDto> {
     const { id } = param;
     const checklist = await this.checklistsService.findOneById(id);
 
@@ -96,7 +104,7 @@ export class ChecklistsController {
   @ApiOperation({
     summary: 'Update checklist by ID',
   })
-  @ApiBaseResponse(Checklist)
+  @ApiBaseResponse(UpdateResult)
   update(@Req() req, @Param() param: ParamIdDto, @Body() body: UpdateChecklistDto) {
     const { id } = param;
     const { user } = req;

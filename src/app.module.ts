@@ -17,9 +17,16 @@ import { ChecklistsModule } from './models/checklists/checklists.module';
 import { ChecklistItemsModule } from './models/checklist-items/checklist-items.module';
 import { UsersModule } from './models/users/users.module';
 import { MailModule } from './mail/mail.module';
+import { AutomapperModule } from '@automapper/nestjs';
+import { classes } from '@automapper/classes';
+import { CamelCaseNamingConvention } from '@automapper/core';
 
 @Module({
   imports: [
+    AutomapperModule.forRoot({
+      strategyInitializer: classes(),
+      namingConventions: new CamelCaseNamingConvention(),
+    }),
     // Config
     AppConfigModule,
     DatabasePostgresConfigModule,
