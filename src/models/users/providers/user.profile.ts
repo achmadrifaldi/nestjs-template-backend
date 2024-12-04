@@ -6,22 +6,22 @@ import { UserDto } from '../dto/user.dto';
 
 @Injectable()
 export class UserProfile extends AutomapperProfile {
-    constructor(@InjectMapper() mapper: Mapper) {
-        super(mapper);
-    }
+  constructor(@InjectMapper() mapper: Mapper) {
+    super(mapper);
+  }
 
-    fromPaginate(data) {
-        console.log(data)
-        const items = data.items.map((item: User) => this.mapper.map(item, User, UserDto))
-        return {
-            ...data,
-            items
-        }
-    }
+  fromPaginate(data) {
+    console.log(data);
+    const items = data.items.map((item: User) => this.mapper.map(item, User, UserDto));
+    return {
+      ...data,
+      items,
+    };
+  }
 
-    override get profile() {
-        return (mapper) => {
-            createMap(mapper, User, UserDto);
-        };
-    }
+  override get profile() {
+    return mapper => {
+      createMap(mapper, User, UserDto);
+    };
+  }
 }

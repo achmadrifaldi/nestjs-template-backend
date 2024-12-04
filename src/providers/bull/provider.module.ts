@@ -26,6 +26,6 @@ import { BasicAuthMiddleware } from './basic-auth.middleware';
       adapter: ExpressAdapter, // Or FastifyAdapter from `@bull-board/fastify`
     }),
   ],
-  exports: [BullModule]
+  exports: [BullModule],
 })
 export class BullProviderModule {}

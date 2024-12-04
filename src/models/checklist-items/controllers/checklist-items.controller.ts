@@ -1,7 +1,20 @@
 import { UpdateResult } from 'typeorm';
 import { Pagination } from 'nestjs-typeorm-paginate';
 
-import { Body, Controller, Delete, Get, NotFoundException, Param, Patch, Post, Query, Req, UseGuards, UseInterceptors } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  NotFoundException,
+  Param,
+  Patch,
+  Post,
+  Query,
+  Req,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 import { ApiBaseResponse } from '../../../common/decorators/api-base-response.decorator';
@@ -46,8 +59,8 @@ export class ChecklistItemsController {
     const { user } = req;
     const payload = {
       ...body,
-      checklist
-    }
+      checklist,
+    };
 
     return this.checklistItemsService.save({ body: payload, user });
   }
@@ -66,32 +79,34 @@ export class ChecklistItemsController {
 
     const { page, limit, sortBy, search } = query;
 
-    const filters = [{
-      column: 'entity.checklist_id',
-      condition: '=',
-      parameterName: 'checklistId',
-      parameterValue: checklistId
-    }];
+    const filters = [
+      {
+        column: 'entity.checklist_id',
+        condition: '=',
+        parameterName: 'checklistId',
+        parameterValue: checklistId,
+      },
+    ];
 
     if (search) {
       filters.push({
         column: 'entity.name',
         condition: 'ILIKE',
         parameterName: 'name',
-        parameterValue: `%${search}%`
-      })
+        parameterValue: `%${search}%`,
+      });
     }
 
     const data = await this.checklistItemsService.findWithPagination({
-      sortBy, 
+      sortBy,
       sortPermitColumns: SORTING_COLUMNS,
       relations: ['entity.checklist'],
       filters,
       limit,
-      page
-    })
+      page,
+    });
 
-    return this.checklistItemProfile.fromPaginate(data)
+    return this.checklistItemProfile.fromPaginate(data);
   }
 
   @Get(':checklistId/checklist-items/:id')
@@ -156,9 +171,9 @@ export class ChecklistItemsController {
       where: {
         id: checklistItemId,
         checklist: {
-          id: checklistId
-        }
-      }
+          id: checklistId,
+        },
+      },
     });
 
     if (!checklistItem) {

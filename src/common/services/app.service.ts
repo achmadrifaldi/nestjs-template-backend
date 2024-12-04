@@ -45,7 +45,7 @@ export class AppService<T> {
     const queryBuilder = this.repository.createQueryBuilder('entity');
 
     // Apply Relations
-    this.applyRelations(queryBuilder, options.relations)
+    this.applyRelations(queryBuilder, options.relations);
 
     // Apply Filters
     options?.filters?.forEach(({ column, condition, parameterName, parameterValue }) => {
@@ -88,10 +88,7 @@ export class AppService<T> {
     return savedData;
   }
 
-  async upsert(
-    payload: CreationDto<DeepPartial<T>>,
-    conflictPathOrOptions: string[],
-  ) {
+  async upsert(payload: CreationDto<DeepPartial<T>>, conflictPathOrOptions: string[]) {
     const { body, user } = payload;
 
     const auditColumn = user
@@ -108,7 +105,7 @@ export class AppService<T> {
 
     const savedData = await this.repository.upsert(
       createdData as unknown as QueryDeepPartialEntity<T>,
-      conflictPathOrOptions,
+      conflictPathOrOptions
     );
 
     return savedData;
@@ -128,7 +125,7 @@ export class AppService<T> {
       {
         ...body,
         updatedBy: userId,
-      } as unknown as QueryDeepPartialEntity<T>,
+      } as unknown as QueryDeepPartialEntity<T>
     );
 
     return updatedData;
@@ -145,7 +142,7 @@ export class AppService<T> {
         { id } as unknown as FindOptionsWhere<T>,
         {
           deletedBy: user.name,
-        } as unknown as QueryDeepPartialEntity<T>,
+        } as unknown as QueryDeepPartialEntity<T>
       );
     }
 
@@ -192,9 +189,9 @@ export class AppService<T> {
     sortBy?.forEach(value => {
       if (value) {
         const [column, direction] = value?.split('|');
-  
+
         const sortDirection = ['asc', 'desc'].includes(direction) ? `${direction}`.toUpperCase() : 'ASC';
-  
+
         if (permitColumns[column]) {
           builder.orderBy(permitColumns[column], sortDirection as 'ASC' | 'DESC');
         }
@@ -210,7 +207,7 @@ export class AppService<T> {
    * @param parameterName - The parameter key to use in the condition.
    * @param parameterValue - The value for the parameter.
    */
-   private applyDynamicCondition(
+  private applyDynamicCondition(
     queryBuilder: SelectQueryBuilder<T>,
     column: string,
     condition: string,
@@ -219,9 +216,8 @@ export class AppService<T> {
   ) {
     // Dynamically construct the condition string
     const conditionString = `${column} ${condition} :${parameterName}`;
-    
+
     // Apply the condition with the parameters
     queryBuilder.andWhere(conditionString, { [parameterName]: parameterValue });
   }
-  
 }

@@ -33,6 +33,6 @@ import { MailConfigService } from 'src/config/mail/config.services';
       inject: [MailConfigService],
     }),
   ],
-  exports: [MailerModule]
+  exports: [MailerModule],
 })
 export class MailProviderModule {}

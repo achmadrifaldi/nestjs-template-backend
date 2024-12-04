@@ -19,7 +19,7 @@ export class UsersService extends AppService<User> {
   }
 
   async saveUser(createUserDto: CreateUserDto): Promise<User> {
-    const user = await super.save({ body: createUserDto })
+    const user = await super.save({ body: createUserDto });
 
     // Send Email
     await this.mailService.sendEmailDelay({ to: user.email, subject: 'Welcome!', payload: { name: user.name } });

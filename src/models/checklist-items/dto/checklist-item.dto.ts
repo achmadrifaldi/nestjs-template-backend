@@ -5,21 +5,20 @@ export class ChecklistItemDto {
   @AutoMap()
   @ApiProperty()
   id: string;
-  
+
   @AutoMap()
   @ApiProperty()
   name: string;
-  
+
   @AutoMap()
   @ApiProperty()
   status: string;
-  
+
   @AutoMap()
   @ApiProperty()
   checklistId: string;
-  
+
   @AutoMap()
   @ApiProperty()
   checklistName: string;
 }
-

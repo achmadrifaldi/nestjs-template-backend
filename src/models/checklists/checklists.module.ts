@@ -5,7 +5,6 @@ import { ChecklistProfile } from './providers/checklist.profile';
 import { Module } from '@nestjs/common';
 import { Checklist } from './entities/checklist.entity';
 
-
 @Module({
   imports: [TypeOrmModule.forFeature([Checklist])],
   controllers: [ChecklistsController],

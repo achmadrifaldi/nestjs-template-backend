@@ -9,7 +9,7 @@ import { AppService } from '../../../common/services/app.service';
 export class ChecklistItemsService extends AppService<ChecklistItem> {
   constructor(
     @InjectRepository(ChecklistItem)
-    private readonly checklistItemRepository: Repository<ChecklistItem>,
+    private readonly checklistItemRepository: Repository<ChecklistItem>
   ) {
     super(checklistItemRepository);
   }

@@ -5,9 +5,8 @@ export class ChecklistDto {
   @AutoMap()
   @ApiProperty()
   id: string;
-  
+
   @AutoMap()
   @ApiProperty()
   name: string;
 }
-

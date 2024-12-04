@@ -68,19 +68,19 @@ export class ChecklistsController {
         column: 'entity.name',
         condition: 'ILIKE',
         parameterName: 'name',
-        parameterValue: `%${search}%`
-      })
+        parameterValue: `%${search}%`,
+      });
     }
 
     const data = await this.checklistsService.findWithPagination({
-      sortBy, 
+      sortBy,
       sortPermitColumns: SORTING_COLUMNS,
       filters,
       limit,
-      page
-    })
+      page,
+    });
 
-    return this.checklistProfile.fromPaginate(data)
+    return this.checklistProfile.fromPaginate(data);
   }
 
   @Get(':id')
