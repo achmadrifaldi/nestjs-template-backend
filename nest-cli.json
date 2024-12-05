@@ -1,8 +1,104 @@
 {
   "$schema": "https://json.schemastore.org/nest-cli",
   "collection": "@nestjs/schematics",
-  "sourceRoot": "src",
+  "sourceRoot": "apps/template-backend/src",
   "compilerOptions": {
-    "deleteOutDir": true
+    "deleteOutDir": true,
+    "webpack": true,
+    "tsConfigPath": "apps/template-backend/tsconfig.app.json",
+    "assets": [
+      {
+        "include": "**/*.hbs",
+        "watchAssets": true
+      },
+      {
+        "include": "**/*.svg"
+      }
+    ]
+  },
+  "monorepo": true,
+  "root": "apps/template-backend",
+  "projects": {
+    "template-backend": {
+      "type": "application",
+      "root": "apps/template-backend",
+      "entryFile": "main",
+      "sourceRoot": "apps/template-backend/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/template-backend/tsconfig.app.json"
+      }
+    },
+    "database": {
+      "type": "library",
+      "root": "libs/database",
+      "entryFile": "index",
+      "sourceRoot": "libs/database/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/database/tsconfig.lib.json"
+      }
+    },
+    "config": {
+      "type": "library",
+      "root": "libs/config",
+      "entryFile": "index",
+      "sourceRoot": "libs/config/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/config/tsconfig.lib.json"
+      }
+    },
+    "provider": {
+      "type": "library",
+      "root": "libs/provider",
+      "entryFile": "index",
+      "sourceRoot": "libs/provider/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/provider/tsconfig.lib.json"
+      }
+    },
+    "authentication": {
+      "type": "library",
+      "root": "libs/authentication",
+      "entryFile": "index",
+      "sourceRoot": "libs/authentication/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/authentication/tsconfig.lib.json"
+      }
+    },
+    "common": {
+      "type": "library",
+      "root": "libs/common",
+      "entryFile": "index",
+      "sourceRoot": "libs/common/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/common/tsconfig.lib.json"
+      }
+    },
+    "job": {
+      "type": "library",
+      "root": "libs/job",
+      "entryFile": "index",
+      "sourceRoot": "libs/job/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/job/tsconfig.lib.json"
+      }
+    },
+    "domain": {
+      "type": "library",
+      "root": "libs/domain",
+      "entryFile": "index",
+      "sourceRoot": "libs/domain/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/domain/tsconfig.lib.json"
+      }
+    },
+    "mail": {
+      "type": "library",
+      "root": "libs/mail",
+      "entryFile": "index",
+      "sourceRoot": "libs/mail/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/mail/tsconfig.lib.json"
+      }
+    }
   }
 }

@@ -6,7 +6,7 @@
   "license": "UNLICENSED",
   "author": "",
   "scripts": {
-    "build": "nest build && cp -R src/mail/templates dist/mail/templates",
+    "build": "nest build",
     "precommit": "lint-staged && npm run lint",
     "commit": "cz",
     "eslint:check": "eslint \"{src,apps,libs,test}/**/*.ts\"",
@@ -14,30 +14,44 @@
     "lint": "npm run eslint:check && npm run prettier:check",
     "prepare": "husky",
     "prepush": "npm run test",
-    "prettier:check": "prettier --check \"src/**/*.ts\" \"test/**/*.ts\"",
-    "prettier:write": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+    "prettier:check": "prettier --check \"apps/**/*.ts\" \"libs/**/*.ts\"",
+    "prettier:write": "prettier --write \"apps/**/*.ts\" \"libs/**/*.ts\"",
     "seed:run": "ts-node ./node_modules/typeorm-extension/bin/cli.cjs seed:run -d ./src/database/data-source.ts",
     "start": "nest start",
     "start:debug": "nest start --debug --watch",
     "start:dev": "nest start --watch",
-    "start:prod": "node dist/main",
+    "start:prod": "node dist/apps/template-backend/main",
     "test": "jest",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "test:e2e": "jest --config ./apps/template-backend/test/jest-e2e.json",
     "test:watch": "jest --watch"
   },
   "jest": {
     "collectCoverageFrom": [
       "**/*.(t|j)s"
     ],
-    "coverageDirectory": "../coverage",
+    "coverageDirectory": "./coverage",
     "moduleFileExtensions": [
       "js",
       "json",
       "ts"
     ],
-    "rootDir": "src",
+    "moduleNameMapper": {
+      "^@app/database(|/.*)$": "<rootDir>/libs/database/src/$1",
+      "^@app/config(|/.*)$": "<rootDir>/libs/config/src/$1",
+      "^@app/provider(|/.*)$": "<rootDir>/libs/provider/src/$1",
+      "^@app/authentication(|/.*)$": "<rootDir>/libs/authentication/src/$1",
+      "^@app/common(|/.*)$": "<rootDir>/libs/common/src/$1",
+      "^@app/job(|/.*)$": "<rootDir>/libs/job/src/$1",
+      "^@app/domain(|/.*)$": "<rootDir>/libs/domain/src/$1",
+      "^@app/mail(|/.*)$": "<rootDir>/libs/mail/src/$1"
+    },
+    "rootDir": ".",
+    "roots": [
+      "<rootDir>/apps/",
+      "<rootDir>/libs/"
+    ],
     "testEnvironment": "node",
     "testRegex": ".*\\.spec\\.ts$",
     "transform": {
@@ -45,6 +59,7 @@
     }
   },
   "dependencies": {
+    "@automapper/classes": "^8.8.1",
     "@automapper/core": "^8.8.1",
     "@automapper/nestjs": "^8.8.1",
     "@automapper/types": "^6.3.1",

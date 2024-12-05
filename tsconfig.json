@@ -16,6 +16,24 @@
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
-    "noFallthroughCasesInSwitch": false
+    "noFallthroughCasesInSwitch": false,
+    "paths": {
+      "@app/database": ["libs/database/src"],
+      "@app/database/*": ["libs/database/src/*"],
+      "@app/config": ["libs/config/src"],
+      "@app/config/*": ["libs/config/src/*"],
+      "@app/provider": ["libs/provider/src"],
+      "@app/provider/*": ["libs/provider/src/*"],
+      "@app/authentication": ["libs/authentication/src"],
+      "@app/authentication/*": ["libs/authentication/src/*"],
+      "@app/common": ["libs/common/src"],
+      "@app/common/*": ["libs/common/src/*"],
+      "@app/job": ["libs/job/src"],
+      "@app/job/*": ["libs/job/src/*"],
+      "@app/domain": ["libs/domain/src"],
+      "@app/domain/*": ["libs/domain/src/*"],
+      "@app/mail": ["libs/mail/src"],
+      "@app/mail/*": ["libs/mail/src/*"]
+    }
   }
 }
