@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { join } from 'path';
 
 // Mailer
 import { MailerModule } from '@nestjs-modules/mailer';
@@ -32,7 +33,7 @@ import { MailConsumer } from '../../job/src/consumers/mail.consumer';
           from: mailConfigService.mailFrom,
         },
         template: {
-          dir: process.cwd() + '/templates',
+          dir: join(__dirname, 'templates'),
           adapter: new HandlebarsAdapter(), // or new PugAdapter() or new EjsAdapter()
           options: {
             strict: true,

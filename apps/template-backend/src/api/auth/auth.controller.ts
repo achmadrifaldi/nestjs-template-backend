@@ -38,6 +38,7 @@ export class AuthController {
     summary: 'Register with email',
   })
   @ApiBaseResponse(User)
+  @UseInterceptors(MapInterceptor(User, UserDto))
   async create(@Body() body: RegisterEmailDto) {
     return this.authenticationService.register(body);
   }
